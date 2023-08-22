@@ -27,7 +27,6 @@ include_directories(${PROJECT_SOURCE_DIR}/deps/glfw/include)
 add_subdirectory(${PROJECT_SOURCE_DIR}/deps/glfw)
 
 add_library( ${PROJECT_NAME} 
-    ${PROJECT_SOURCE_DIR}/src/main.c 
     ${PROJECT_SOURCE_DIR}/src/gl.c
     ${PROJECT_SOURCE_DIR}/src/shader.c
     ${PROJECT_SOURCE_DIR}/src/camera.c
