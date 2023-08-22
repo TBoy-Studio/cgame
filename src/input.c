@@ -6,7 +6,7 @@ void input_key_callback(GLFWwindow* window, int key, int scancode, int action, i
     if(key < 0) return;                                             // If key is unknown simply ignore
     if(current_key_action_lib[(unsigned int)key] != NULL)
     {
-        current_key_action_lib[(unsigned int)key](action, mods);    // If this key has an associated action, execute it
+        current_key_action_lib[(unsigned int)key](window, action, mods);    // If this key has an associated action, execute it
     } 
 }
 

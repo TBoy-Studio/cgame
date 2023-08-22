@@ -13,7 +13,7 @@
  *  @param[in] mods Bit field describing which modifier keys (SHIFT, CONTROL etc) were
  *  held down. See more about these in the glfw documentation. 
  */
-typedef void (* KeyAction)(int action, int mods);
+typedef void (* KeyAction)(GLFWwindow* window, int action, int mods);
 
 /*! @brief  The KeyActionLib is a typedef for an array of KeyAction function pointers.
 
