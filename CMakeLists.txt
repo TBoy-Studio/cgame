@@ -11,6 +11,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS True)
 # Build as static lib
 set(BUILD_SHARED_LIBS False)
 
+# GLFW Options
+set(GLFW_BUILD_EXAMPLES False)
+set(GLFW_BUILD_TESTS False)
+set(GLFW_BUILD_DOCS False)
+set(GLFW_INSTALL False)
+
 # Build with all warnings enabled and optimize maximally
 add_compile_options(-Wall -Wextra -Wpedantic -O3)
 
@@ -28,4 +34,4 @@ add_executable( ${PROJECT_NAME}
     ${PROJECT_SOURCE_DIR}/src/window.c
 )
 
-target_link_libraries( ${PROJECT_NAME} PRIVATE m )
+target_link_libraries( ${PROJECT_NAME} PRIVATE m glfw )
