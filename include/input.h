@@ -30,7 +30,7 @@ extern KeyActionLib current_key_action_lib;
     @param[in] window The window to fetch inputs from
     @param[in] key_action_lib The array of function pointers from individual key actions
 */
-void input_initialize(GLFWwindow* window, KeyActionLib key_action_lib);
+void input_initialize(GLFWwindow* window);
 
 /*! @brief Copies the specified KeyActionLib over the current KeyActionLib.
 

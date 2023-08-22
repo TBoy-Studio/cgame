@@ -10,9 +10,8 @@ void input_key_callback(GLFWwindow* window, int key, int scancode, int action, i
     } 
 }
 
-void input_initialize(GLFWwindow* window, KeyActionLib key_action_lib){
+void input_initialize(GLFWwindow* window){
     glfwSetKeyCallback(window, input_key_callback); // Set generic key callback
-    input_update_key_action_lib(key_action_lib);    // Set the array of function pointers per key
 }
 
 void input_update_key_action_lib(KeyActionLib new_key_action_lib){
