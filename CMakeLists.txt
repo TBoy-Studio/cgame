@@ -14,16 +14,18 @@ set(BUILD_SHARED_LIBS False)
 # Build with all warnings enabled and optimize maximally
 add_compile_options(-Wall -Wextra -Wpedantic -O3)
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/submodules/TEngine-Camera)
-add_subdirectory(${PROJECT_SOURCE_DIR}/submodules/TEngine-Shader)
-add_subdirectory(${PROJECT_SOURCE_DIR}/submodules/TEngine-Window)
-
 # Include directories for header files
 include_directories(${PROJECT_SOURCE_DIR}/include)
-include_directories(${PROJECT_SOURCE_DIR}/submodules/TEngine-Camera/include)
-include_directories(${PROJECT_SOURCE_DIR}/submodules/TEngine-Shader/include)
-include_directories(${PROJECT_SOURCE_DIR}/submodules/TEngine-Window/include)
+include_directories(${PROJECT_SOURCE_DIR}/deps/glfw/include)
 
-add_executable( ${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/main.c )
+add_subdirectory(${PROJECT_SOURCE_DIR}/deps/glfw)
 
-target_link_libraries( ${PROJECT_NAME} PRIVATE m tengine-camera tengine-shader tengine-window)
+add_executable( ${PROJECT_NAME} 
+    ${PROJECT_SOURCE_DIR}/src/main.c 
+    ${PROJECT_SOURCE_DIR}/src/gl.c
+    ${PROJECT_SOURCE_DIR}/src/shader.c
+    ${PROJECT_SOURCE_DIR}/src/camera.c
+    ${PROJECT_SOURCE_DIR}/src/window.c
+)
+
+target_link_libraries( ${PROJECT_NAME} PRIVATE m )

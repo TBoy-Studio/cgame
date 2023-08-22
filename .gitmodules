@@ -1,9 +1,0 @@
-[submodule "submodules/TEngine-Shader"]
-	path = submodules/TEngine-Shader
-	url = https://github.com/TBoy-Studio/TEngine-Shader.git
-[submodule "submodules/TEngine-Camera"]
-	path = submodules/TEngine-Camera
-	url = https://github.com/TBoy-Studio/TEngine-Camera.git
-[submodule "submodules/TEngine-Window"]
-	path = submodules/TEngine-Window
-	url = https://github.com/TBoy-Studio/TEngine-Window.git
