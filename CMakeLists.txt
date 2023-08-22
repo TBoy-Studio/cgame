@@ -32,6 +32,7 @@ add_library( ${PROJECT_NAME}
     ${PROJECT_SOURCE_DIR}/src/shader.c
     ${PROJECT_SOURCE_DIR}/src/camera.c
     ${PROJECT_SOURCE_DIR}/src/window.c
+    ${PROJECT_SOURCE_DIR}/src/input.c
 )
 
 target_link_libraries( ${PROJECT_NAME} PRIVATE m glfw )
