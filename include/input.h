@@ -9,37 +9,32 @@
 
 /*! @brief The function pointer type for a single keyboard key callback.
  *
- *  @param[in] window The window the event occured in
  *  @param[in] action `GLFW_PRESS`, `GLFW_RELEASE` or `GLFW_REPEAT`.
  *  @param[in] mods Bit field describing which modifier keys (SHIFT, CONTROL etc) were
  *  held down. See more about these in the glfw documentation. 
  */
-typedef void (* KeyAction)(GLFWwindow* window, int action, int mods);
+typedef void (* KeyAction)(int action, int mods);
 
 /*! @brief The function pointer type for a single mouse button callback.
  *
- *  @param[in] window The window the event occured in
  *  @param[in] action `GLFW_PRESS`, `GLFW_RELEASE` or `GLFW_REPEAT`.
  *  @param[in] mods Bit field describing which modifier keys (SHIFT, CONTROL etc) were
  *  held down. See more about these in the glfw documentation. 
  */
-typedef void (* MouseButtonAction)(GLFWwindow* window, int action, int mods);
+typedef void (* MouseButtonAction)(int action, int mods);
 
 /*! @brief The function pointer type for a single mouse scroll callback
  *
- *  @param[in] window The window the event occured in
- *  @param[in] xoffset The x-offset of the scroll (can be usually be ignored as scroll happens along y axis)
  *  @param[in] yoffset The y-offset of the scroll (The amount the user has scrolled)
 */
-typedef void (* MouseScrollAction)(GLFWwindow* window, double xoffset, double yoffset);
+typedef void (* MouseScrollAction)(double yoffset);
 
 /*! @brief The function pointer type for a single mouse cursor callback
  *
- *  @param[in] window The window the event occured in
  *  @param[in] xpos The x-offset of the scroll (can be usually be ignored as scroll happens along y axis)
  *  @param[in] ypos The y-offset of the scroll (The amount the user has scrolled)
 */
-typedef void (* MouseCursorAction)(GLFWwindow* window, double xpos, double ypos);
+typedef void (* MouseCursorAction)(double xpos, double ypos);
 
 /*! @brief A type that provides information ont he key callback that has been set up on this key
  *  

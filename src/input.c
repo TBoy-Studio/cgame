@@ -14,7 +14,7 @@ void input_process(GLFWwindow* window){
         KeyActionContext context = current_key_actions[i];
         if(context.last_key_action == GLFW_PRESS && context.repeat == GLFW_TRUE){
             // If it is currently being pressed and the repeat bool is set, execute the callback function
-            context.action(window, GLFW_PRESS, current_key_actions[i].mods);
+            context.action(GLFW_PRESS, current_key_actions[i].mods);
         }
     }
 }
@@ -30,7 +30,7 @@ void input_key_callback(GLFWwindow* window, int key, int scancode, int action, i
     {
         context->last_key_action = (unsigned char)action;
         context->mods = mods;
-        context->action(window, action, mods);
+        context->action(action, mods);
     } 
 }
 
@@ -41,13 +41,13 @@ void input_mouse_button_callback(GLFWwindow* window, int button, int action, int
     // If this mouse button has an associated action, execute it
     if(current_mouse_button_actions[(unsigned int)button] != NULL)
     {
-        current_mouse_button_actions[(unsigned int)button](window, action, mods);
+        current_mouse_button_actions[(unsigned int)button](action, mods);
     }
 }
 
 void input_scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
     // If there is a scroll action set, execute it
-    if(current_scroll_action != NULL) current_scroll_action(window, xoffset, yoffset);
+    if(current_scroll_action != NULL) current_scroll_action(yoffset);
 }
 
 void input_cursor_callback(GLFWwindow* window, double xpos, double ypos){
@@ -59,7 +59,7 @@ void input_cursor_callback(GLFWwindow* window, double xpos, double ypos){
     }
 
     // If there's a cursor action registered, execute it
-    if(current_cursor_action != NULL) current_cursor_action(window, xpos, ypos);
+    if(current_cursor_action != NULL) current_cursor_action(xpos, ypos);
 
     // Update the last coordinates with the most recent ones after all calculation is done
     input_mouse_cursor_last_x = xpos;
@@ -72,6 +72,8 @@ void input_initialize(GLFWwindow* window){
     glfwSetMouseButtonCallback(window, input_mouse_button_callback);
     glfwSetScrollCallback(window, input_scroll_callback);
     glfwSetCursorPosCallback(window, input_cursor_callback);
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Make sure to set all function pointers to zero
     // Prevents accidentally interpreting a random value as a function to execute
