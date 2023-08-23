@@ -9,5 +9,6 @@
 #include <camera.h>
 #include <input.h>
 #include <shader.h>
+#include <model.h>
 
 #endif
