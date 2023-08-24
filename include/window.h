@@ -5,17 +5,28 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
-#define MAX_NUM_WINDOWS 8
-
+/*
+    This struct holds some basic information about a window
+*/
 typedef struct{
     GLFWwindow* win;
     int width;
     int height;
 } Window;
 
-extern Window window;
+/*
+    Builds and starts showing a window
+*/
+unsigned char Window_build(const char* title);
 
-unsigned char window_create(const char* title);
-void window_destroy(void);
+/*
+    Returns a pointer to the window actively being rendered to.
+*/
+Window* Window_getActiveWindow(void);
+
+/*
+    Cleans up all resources from the window
+*/
+void Window_destroy(void);
 
 #endif

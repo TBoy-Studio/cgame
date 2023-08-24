@@ -1,23 +1,24 @@
 #include <window.h>
 
-unsigned char glfw_initialized = 0;
-unsigned char glad_initialized = 0;
-int gl_version = 0;
+static unsigned char _isGlfwInitialized;
+static unsigned char _isGladInitialized;
+static Window _window;
 
-Window window;
-
-void framebuffer_size_callback(GLFWwindow* glfw_window, int width, int height){
+static void framebufferSizeCallback(GLFWwindow* glfw_window, int width, int height)
+{
+    // Update the viewport
     glViewport(0, 0, width, height);
 
-    window.width = width;
-    window.height = height;
+    // Update the window fields
+    _window.width = width;
+    _window.height = height;
 }
 
-unsigned char window_create(const char* title){
+unsigned char Window_build(const char* title)
+{
     // If GLFW has not been initialized, try to do it now
-    if(!glfw_initialized && !glfwInit()) return 0; // If failed return 0
-    
-    glfw_initialized = 1; // glfw has been succesfully initialized
+    if(!_isGlfwInitialized && !glfwInit()) return 0; // If failed return 0    
+    _isGlfwInitialized = 1; // glfw has been succesfully initialized
 
     // Configure GLFW window for the OpenGL version that will run in it
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -48,32 +49,44 @@ unsigned char window_create(const char* title){
         glfwTerminate();
         return 0;
     }
+
+    // Make the window context the active context
     glfwMakeContextCurrent(glfw_window);
 
-    (void)glfwSetFramebufferSizeCallback(glfw_window, framebuffer_size_callback);
+    // Set callback for when window changes size
+    (void)glfwSetFramebufferSizeCallback(glfw_window, framebufferSizeCallback);
 
     // If GLAD has not been initialized, try to do it now
-    if(!glad_initialized && !gladLoadGL(glfwGetProcAddress)){
+    if(!_isGladInitialized && !gladLoadGL(glfwGetProcAddress)){
         glfwTerminate();    // abort if failed
         return 0;
     }
-    glad_initialized = 1; // glad has been succesfully initialized
+    _isGladInitialized = 1; // glad has been succesfully initialized
 
+    // Configure OpenGL viewport
     glViewport(0, 0, width, height);
 
-    window.win = glfw_window;
-    window.width = width;
-    window.height = height;
+    // Fill in the window fields
+    _window.win = glfw_window;
+    _window.width = width;
+    _window.height = height;
 
     return 1;
 }
 
-void window_destroy(void){
-    glfwDestroyWindow(window.win);
+// TODO: MAKE SURE THIS NEVER NEEDS TO BE CALLED AND THEN REMOVE THE ENTIRE FUNCTION
+Window* Window_getActiveWindow(void)
+{
+    return &_window; // eww
+}
+
+void Window_destroy(void)
+{
+    glfwDestroyWindow(_window.win);
     glfwTerminate();
     
-    glfw_initialized = 0;
-    glad_initialized = 0;
+    _isGlfwInitialized = 0;
+    _isGladInitialized = 0;
     
     return;
 }
