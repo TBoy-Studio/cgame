@@ -2,103 +2,102 @@
 #define INPUT_H
 
 // 3rd party lib
+#include <window.h>
 #include <GLFW/glfw3.h>
 
-// Including string.h for memcpy operation
+// Including string.h for memory operations
 #include <string.h>
 
-/*! @brief The function pointer type for a single keyboard key callback.
- *
- *  @param[in] action `GLFW_PRESS`, `GLFW_RELEASE` or `GLFW_REPEAT`.
- *  @param[in] mods Bit field describing which modifier keys (SHIFT, CONTROL etc) were
- *  held down. See more about these in the glfw documentation. 
- */
-typedef void (* KeyAction)(int action, int mods);
-
-/*! @brief The function pointer type for a single mouse button callback.
- *
- *  @param[in] action `GLFW_PRESS`, `GLFW_RELEASE` or `GLFW_REPEAT`.
- *  @param[in] mods Bit field describing which modifier keys (SHIFT, CONTROL etc) were
- *  held down. See more about these in the glfw documentation. 
- */
-typedef void (* MouseButtonAction)(int action, int mods);
-
-/*! @brief The function pointer type for a single mouse scroll callback
- *
- *  @param[in] yoffset The y-offset of the scroll (The amount the user has scrolled)
+/*
+    The callback function type that gets called when a key is
+    pressed or released.
 */
-typedef void (* MouseScrollAction)(double yoffset);
+typedef void (* Input_KeyActionFunc)(int action, int mods);
 
-/*! @brief The function pointer type for a single mouse cursor callback
- *
- *  @param[in] xpos The x-offset of the scroll (can be usually be ignored as scroll happens along y axis)
- *  @param[in] ypos The y-offset of the scroll (The amount the user has scrolled)
+/*
+    The callback function type that gets called when a mouse button 
+    is pressed or released.
 */
-typedef void (* MouseCursorAction)(double xpos, double ypos);
+typedef void (* Input_MouseButtonActionFunc)(int action, int mods);
 
-/*! @brief A type that provides information ont he key callback that has been set up on this key
- *  
- *  Holds the callback function pointer, whether or not the press event should be repeated every
- *  frame (for holding down keys) and the current key state (GLFW_PRESS or GLFW_RELEASE)
+/*
+    The callback function type that gets called when a user scrolls
+    the mouse wheel.
+*/
+typedef void (* Input_MouseScrollActionFunc)(double yoffset);
+
+/*
+    The callback function type that gets called when a user moves
+    the cursor.
+*/
+typedef void (* Input_MouseCursorActionFunc)(double xpos, double ypos);
+
+/*  
+    Holds the callback function pointer, whether or not the press event should be repeated every
+    frame (for holding down keys) and the current key state (GLFW_PRESS or GLFW_RELEASE)
 */
 typedef struct{
-    KeyAction action;
+    Input_KeyActionFunc action;
     int mods;
     unsigned char repeat;
     unsigned char last_key_action;
-} KeyActionContext;
+} Input_KeyActionContext;
 
-// Variables to easily access the previous x and y of the mouse cursor
-extern double input_mouse_cursor_last_x, input_mouse_cursor_last_y;
-
-/*! @brief Initializes the input library.
-
-    @param[in] window The window to fetch inputs from
+/*
+    Initializes the input library and clears all callback functions.
 */
-void input_initialize(GLFWwindow* window);
+void Input_init(Window *window);
 
-/*! @brief Copies the specified KeyActionLib over the current KeyActionLib.
-
-    @param[in] new_key_action_lib The new KeyActionLib to copy over the old one
+/*
+    Copies the specified array of keyactions over the array currently used by the window
+    Can be used to update multiple keyactions in one go.
 */
-void input_set_key_action_lib(KeyActionContext new_key_action_lib[GLFW_KEY_LAST + 1]);
+void Input_setKeyActions(Input_KeyActionContext key_actions[GLFW_KEY_LAST + 1]);
 
-/*! @brief Updates the KeyAction associated with a single key
-
-    @param[in] key The key to update the KeyAction of
-    @param[in] new_key_action The new key action to be associated with this key
+/*
+    Registers the function pointer to a callback function that gets called
+    when the specified key is pressed or released.
 */
-void input_set_key_action(int key, KeyAction new_key_action, unsigned char repeat);
+void Input_setKeyAction(int key, Input_KeyActionFunc key_action, unsigned char repeat);
 
-/*! @brief Copies the specified MouseButtonActionLib over the current MouseButtonActionLib.
-
-    @param[in] new_mouse_button_action_lib The new KeyActionLib to copy over the old one
+/*
+    Copies the specified array of mouse button actions over the array
+    currently used.
+    Can be used to update multiple keyactions in one go.
 */
-void input_set_mouse_button_action_lib(MouseButtonAction new_mouse_button_action_lib[GLFW_MOUSE_BUTTON_LAST + 1]);
+void Input_setMouseButtonActions(Input_MouseButtonActionFunc button_actions[GLFW_MOUSE_BUTTON_LAST + 1]);
 
-/*! @brief Updates the MouseButtonAction associated with a single mouse button
-
-    @param[in] key The mouse button to update the MouseButtonAction of
-    @param[in] new_key_action The new action to be associated with this mouse button
+/*
+    Registers the function pointer to a callback function that gets called
+    when the specified mouse button is pressed or released.
 */
-void input_set_mouse_button_action(int button, MouseButtonAction new_key_action);
+void Input_setMouseButtonAction(int button, Input_MouseButtonActionFunc button_action);
 
-/*! @brief Updates the MouseScrollAction associated with scrolling a mouse wheel
-
-    @param[in] new_scroll_action The new action to be associated with scrolling
+/*
+    Registers the function pointer to a callback function that gets called
+    when the mouse is scrolled.
 */
-void input_set_mouse_scroll_action(MouseScrollAction new_scroll_action);
+void Input_setMouseScrollAction(Input_MouseScrollActionFunc scroll_action);
 
-/*! @brief Update the MouseCursorAction associated with moving the mouse
- *  
- *  @param[in] new_cursor_action The new action to be associated with moving the mouse
+/*
+    Registers the function pointer to a callback function that gets called
+    when the mouse cursor has moved.
 */
-void input_set_mouse_cursor_action(MouseCursorAction new_cursor_action);
+void Input_setMouseCursorAction(Input_MouseCursorActionFunc cursor_action);
 
-/*! @brief Handles per frame callbacks for keys that are set up for that
-
-    @param[in] window The window to process the keys for
+/*
+    Calls the callback function for all keys that are currently pressed
+    and have (repeat = true) in the action context.
+    This function should be called at the start of the main rendering loop
 */
-void input_process(GLFWwindow* window);
+void Input_handleHoldDownKeys(void);
+
+/*
+    Get the mouse position from the previous frame.
+    Updates after all input processing for current
+    frame is done.
+*/
+void Input_getPrevMouseCursorPosition(float result[2]);
+
 
 #endif
