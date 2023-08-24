@@ -1,116 +1,103 @@
 #include <shader.h>
 
-unsigned int compile_shader(const char* vertex_src, const char* fragment_src){
-    // Declare vars
-    unsigned int vertex_shader, fragment_shader;
+static Shader _compileShader(const char* shaderPath, GLenum type, Shader_Program program)
+{
+    // Sanity check
+    if(!shaderPath) return 0;
+
+    // Try opening file
+    FILE* shaderFile = fopen(shaderPath, "r"); 
+    if(!shaderFile) return 0;
+
+    // Get shader file size
+    unsigned long shaderFileSize;    
+    fseek(shaderFile, 0, SEEK_END);
+    shaderFileSize = ftell(shaderFile);
+    rewind(shaderFile);
+
+    // Setup buffer for file contents
+    char shaderSrc[shaderFileSize + 1];
+    const char *shaderSrcPtr = shaderSrc;
+    shaderSrc[shaderFileSize] = '\0';
+
+    // Read the file into the buffer
+    unsigned long shaderBytesRead;
+    shaderBytesRead = fread(shaderSrc, sizeof(char), shaderFileSize, shaderFile);
+    if(shaderBytesRead != shaderFileSize) return 0; // Something went wrong while reading
+
+    // Create GL shader
+    Shader shader;
     int success;
+    shader = glCreateShader(type);
+    glShaderSource(shader, 1, (const char**)&shaderSrcPtr, NULL);
 
-    // First vertex shader
-    vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_shader, 1, (const char**)&vertex_src, NULL);
-    glCompileShader(vertex_shader);
-    glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-    
-    if(!success){
-        return 0;
-    }
+    // Compile shader
+    glCompileShader(shader);
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if(!success) return 0;
 
-    // Then fragment Shader
-    fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader, 1, (const char**)&fragment_src, NULL);
-    glCompileShader(fragment_shader);
-    glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
+    // Attach shader to program
+    glAttachShader(program, shader);
 
-    if(!success){
-        return 0;
-    }
+    // Return the shader so it can later be erased after linking
+    return shader;
+}
 
-    // Create program
-    Shader program = glCreateProgram();
-    glAttachShader(program, vertex_shader);
-    glAttachShader(program, fragment_shader);
+Shader_Program Shader_createProgram(const char* vertexPath, const char* geometryPath, const char* fragmentPath)
+{
+    // Create shader program
+    Shader_Program program;
+    program = glCreateProgram();
+
+    // Compile shaders into program
+    Shader vertex = _compileShader(vertexPath, GL_VERTEX_SHADER, program);
+    Shader geometry = _compileShader(geometryPath, GL_GEOMETRY_SHADER, program);
+    Shader fragment = _compileShader(fragmentPath, GL_FRAGMENT_SHADER, program);
+
+    // Link program
+    int success;
     glLinkProgram(program);
-
-    // Check for linking errors
     glGetProgramiv(program, GL_LINK_STATUS, &success);
-    if(!success){
-        return 0;
+    if(!success)
+    {
+        glDeleteProgram(program);
+        program = 0;
     }
 
-    glDeleteShader(vertex_shader);
-    glDeleteShader(fragment_shader);
+    // Delete shaders
+    glDeleteShader(vertex);
+    glDeleteShader(fragment);
+    glDeleteShader(geometry);
 
     return program;
 }
 
-Shader shader_create(const char* vertex_path, const char* fragment_path){
-    Shader shader;
-
-    FILE* vertex_file = fopen(vertex_path, "r");
-    FILE* fragment_file = fopen(fragment_path, "r");
-
-    // Check if opening files was succesful
-    if (vertex_file == NULL) {
-        return 0;
-    }
-    if (fragment_file == NULL) {
-        return 0;
-    }
-
-    // Get the length of the files
-    fseek(vertex_file, 0L, SEEK_END);
-    unsigned long vertex_file_length = ftell(vertex_file);
-    rewind(vertex_file);
-    fseek(fragment_file, 0L, SEEK_END);    
-    unsigned long fragment_file_length = ftell(fragment_file);    
-    rewind(fragment_file);
-
-    // Create buffers to store file contents
-    char vertex_src[vertex_file_length + 1];
-    char fragment_src[fragment_file_length + 1];
-
-    // Add terminating zeroes to buffers
-    vertex_src[vertex_file_length] = '\0';
-    fragment_src[fragment_file_length] = '\0';
-
-    // Read from files into buffers
-    unsigned long vertex_bytes_read = fread(vertex_src, sizeof(char), vertex_file_length, vertex_file);
-    unsigned long fragment_bytes_read = fread(fragment_src, sizeof(char), fragment_file_length, fragment_file);
-
-    // Check if read was succesful
-    if(vertex_bytes_read != vertex_file_length){
-        return 0;
-    }
-    if(fragment_bytes_read != fragment_file_length){
-        return 0;
-    }
-
-    // Try and compile shaders
-    shader = compile_shader(vertex_src, fragment_src);
-
-    return shader;
+void Shader_useProgram(Shader_Program program)
+{
+    glUseProgram(program);
 }
 
-void shader_use(Shader shader){
-    glUseProgram(shader);
+void Shader_setBool(Shader_Program program, const char* name, unsigned char value)
+{
+    glUniform1i(glGetUniformLocation(program, name), (int)value);
 }
 
-void shader_set_bool(Shader shader, const char* name, unsigned char value){
-    glUniform1i(glGetUniformLocation(shader, name), (int)value);
+void Shader_setInt(Shader_Program program, const char* name, int value)
+{
+    glUniform1i(glGetUniformLocation(program, name), value);
 }
 
-void shader_set_int(Shader shader, const char* name, int value){
-    glUniform1i(glGetUniformLocation(shader, name), value);
+void Shader_setFloat(Shader_Program program, const char* name, float value)
+{
+    glUniform1f(glGetUniformLocation(program, name), value);
 }
 
-void shader_set_float(Shader shader, const char* name, float value){
-    glUniform1f(glGetUniformLocation(shader, name), value);
+void Shader_setVec3(Shader_Program program, const char* name, vec3 value)
+{
+    glUniform3fv(glGetUniformLocation(program, name), 1, value);
 }
 
-void shader_set_vec3(Shader shader, const char* name, vec3 value){
-    glUniform3fv(glGetUniformLocation(shader, name), 1, value);
-}
-
-void shader_set_mat4(Shader shader, const char* name, mat4 value){
-    glUniformMatrix4fv(glGetUniformLocation(shader, name), 1, GL_FALSE, &value[0][0]);
+void Shader_setMat4(Shader_Program program, const char* name, mat4 value)
+{
+    glUniformMatrix4fv(glGetUniformLocation(program, name), 1, GL_FALSE, &value[0][0]);
 }
