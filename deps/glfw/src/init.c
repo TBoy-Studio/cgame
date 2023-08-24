@@ -27,6 +27,14 @@
 // Please use C89 style variable declarations in this file because VS 2010
 //========================================================================
 
+/*
+    THIS SOURCE FILE HAS BEEN ALTERED FOR PERSONAL USE.
+    THEREFORE THIS IS NOT THE ORIGINAL SOFTWARE.
+
+    Changes:
+    - glfwIsInitialized function added
+*/
+
 #include "internal.h"
 
 #include <string.h>
@@ -450,6 +458,10 @@ GLFWAPI int glfwInit(void)
 
     glfwDefaultWindowHints();
     return GLFW_TRUE;
+}
+
+GLFWAPI int glfwIsInitialized(){
+    return _glfw.initialized;
 }
 
 GLFWAPI void glfwTerminate(void)

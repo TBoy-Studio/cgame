@@ -26,6 +26,14 @@
  *
  *************************************************************************/
 
+/*
+    THIS VERSION OF GLFW3 HAS BEEN ALTERED FOR PERSONAL USE.
+    THEREFORE THIS IS NOT THE ORIGINAL SOFTWARE
+
+    Changes:
+    - glfwIsInitialized function added
+*/
+
 #ifndef _glfw3_h_
 #define _glfw3_h_
 
@@ -2192,6 +2200,10 @@ GLFWAPI int glfwInit(void);
  *  @ingroup init
  */
 GLFWAPI void glfwTerminate(void);
+
+/*! @brief Gets a boolean value indicating whether glfw has already been initialized.
+ */
+GLFWAPI int glfwIsInitialized(void);
 
 /*! @brief Sets the specified init hint to the desired value.
  *
