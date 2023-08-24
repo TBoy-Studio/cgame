@@ -21,6 +21,7 @@ unsigned char Window_build(const char* title);
 
 /*
     Returns a pointer to the window actively being rendered to.
+    Function is gross, eww and yuck.
 */
 Window* Window_getActiveWindow(void);
 
