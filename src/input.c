@@ -80,9 +80,6 @@ static void _cursorCallback(GLFWwindow* window, double xpos, double ypos)
 
 void Input_init(Window *window)
 {
-    // A window needs to be created before
-    if(!glfwIsInitialized()) return;
-
     GLFWwindow* glfw_window = window->win;
 
     // Set generic key callback

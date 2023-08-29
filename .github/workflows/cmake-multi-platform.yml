@@ -26,22 +26,23 @@ jobs:
         sudo apt update
         sudo apt install libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev
     - name: Generate Build Files
-      run: cmake -S ${{ github.workspace }} -B ${{ github.workspace }}/build
+      run: cmake -S . -B build
     - name: Build Library
-      run: cmake --build ${{ github.workspace }}/build --parallel
+      run: cmake --build build --parallel
 
   build-macos:
     name: Cocoa (MacOS, Clang)
     runs-on: macos-latest
     env:
+      CC: clang
       CFLAGS: -Werror
       MACOSX_DEPLOYMENT_TARGET: 10.8    
     steps:
     - uses: actions/checkout@v3
     - name: Generate Build Files
-      run: cmake -S ${{ github.workspace }} -B ${{ github.workspace }}/build
+      run: cmake -S . -B build
     - name: Build Library
-      run: cmake --build ${{ github.workspace }}/build --parallel
+      run: cmake --build build --parallel
 
   build-windows:
     name: Win32 (Windows, Visual Studio 2022)
@@ -51,8 +52,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Generate Build Files
-      run: cmake -S ${{ github.workspace }} -B ${{ github.workspace }}/build -G "Visual Studio 17 2022"
+      run: cmake -S . -B build -G "Visual Studio 17 2022"
     - name: Build Library
-      run: cmake --build ${{ github.workspace }}/build --parallel
+      run: cmake --build build --parallel
   
     
