@@ -32,8 +32,4 @@ add_library( ${PROJECT_NAME}
     ${PROJECT_SOURCE_DIR}/src/model.c
 )
 
-if(WIN32)
-    target_link_libraries( ${PROJECT_NAME} PRIVATE m glfw3 )
-elseif(UNIX)
-    target_link_libraries( ${PROJECT_NAME} PRIVATE m glfw )
-endif()
+target_link_libraries( ${PROJECT_NAME} PRIVATE m glfw )
