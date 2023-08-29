@@ -48,8 +48,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: ilammy/msvc-dev-cmd@v1.12.1
-        with:
-          arch: x64
+      with:
+        arch: x64
     - name: Generate Build Files
       run: cmake -S . -B build -G "NMake Makefiles"
     - name: Build Library
