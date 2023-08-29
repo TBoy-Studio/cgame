@@ -16,80 +16,35 @@ jobs:
   build-linux:
     name: Linux (Linux, GCC)
     runs-on: ubuntu-latest
+    compiler: clang
     env:
+      CC: clang
+      CXX: clang
       CFLAGS: -Werror    
     steps:
     - uses: actions/checkout@v3
-    - name: Install compiler
-      id: install_compiler
-      uses: rlalik/setup-cpp-compiler@master
-      with:
-        compiler: latest
     - name: Install dependencies
       run: |
         sudo apt update
         sudo apt install libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev
     - name: Generate Build Files
-      shell: bash
-      env:
-        CC: ${{ steps.install_compiler.outputs.cc }}
-        CXX: ${{ steps.install_compiler.outputs.cxx }}
       run: cmake -S . -B build
     - name: Build Library
-      shell: bash
-      env:
-        CC: ${{ steps.install_compiler.outputs.cc }}
-        CXX: ${{ steps.install_compiler.outputs.cxx }}
       run: cmake --build build --parallel
 
   build-macos:
     name: Cocoa (MacOS, GCC)
     runs-on: macos-latest
+    compiler: clang
     env:
+      CC: clang
+      CXX: clang
       CFLAGS: -Werror    
     steps:
     - uses: actions/checkout@v3
-    - name: Install compiler
-      id: install_compiler
-      uses: rlalik/setup-cpp-compiler@master
-      with:
-        compiler: latest
     - name: Generate Build Files
-      shell: bash
-      env:
-        CC: ${{ steps.install_compiler.outputs.cc }}
-        CXX: ${{ steps.install_compiler.outputs.cxx }}
       run: cmake -S . -B build
     - name: Build Library
-      shell: bash
-      env:
-        CC: ${{ steps.install_compiler.outputs.cc }}
-        CXX: ${{ steps.install_compiler.outputs.cxx }}
-      run: cmake --build build --parallel
-
-  build-windows:
-    name: Win32 (Windows, GCC)
-    runs-on: windows-latest
-    env:
-      CFLAGS: /WX
-    steps:
-    - uses: actions/checkout@v3
-    - name: Install compiler
-      id: install_compiler
-      uses: rlalik/setup-cpp-compiler@master
-      with:
-        compiler: latest
-    - name: Generate Build Files
-      shell: bash
-      env:
-        CC: ${{ steps.install_compiler.outputs.cc }}
-        CXX: ${{ steps.install_compiler.outputs.cxx }}
-      run: cmake -S . -B build
-    - name: Build Library
-      shell: bash
-      env:
-        CC: ${{ steps.install_compiler.outputs.cc }}
-        CXX: ${{ steps.install_compiler.outputs.cxx }}
       run: cmake --build build --parallel
   
     
