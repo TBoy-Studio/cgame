@@ -16,7 +16,6 @@ jobs:
   build-linux:
     name: Linux (Linux, GCC)
     runs-on: ubuntu-latest
-    compiler: clang
     env:
       CC: clang
       CXX: clang
@@ -35,7 +34,6 @@ jobs:
   build-macos:
     name: Cocoa (MacOS, GCC)
     runs-on: macos-latest
-    compiler: clang
     env:
       CC: clang
       CXX: clang
