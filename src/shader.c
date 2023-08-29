@@ -16,8 +16,9 @@ static Shader _compileShader(const char* shaderPath, GLenum type, Shader_Program
     rewind(shaderFile);
 
     // Setup buffer for file contents
-    char *shaderSrc = calloc(shaderFileSize + 1, sizeof(char));
+    char shaderSrc[shaderFileSize + 1];
     const char *shaderSrcPtr = (const char*)shaderSrc;
+    shaderSrc[shaderFileSize] = '\0';
 
     // Read the file into the buffer
     unsigned long shaderBytesRead;
