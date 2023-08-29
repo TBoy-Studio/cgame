@@ -22,7 +22,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         build_type: [Release]
-        compiler: [gcc, g++, cl]
+        c_compiler: [ gcc ]
+        cpp_compiler: [ g++-10 ]
         include:
           - os: windows-latest
             c_compiler: cl
