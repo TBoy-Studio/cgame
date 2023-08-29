@@ -14,46 +14,82 @@ defaults:
 
 jobs:
   build-linux:
-    name: Linux (Linux, Clang)
+    name: Linux (Linux, GCC)
     runs-on: ubuntu-latest
     env:
-      CC: clang
       CFLAGS: -Werror    
     steps:
     - uses: actions/checkout@v3
+    - name: Install compiler
+      id: install_compiler
+      uses: rlalik/setup-cpp-compiler@master
+      with:
+        compiler: latest
     - name: Install dependencies
       run: |
         sudo apt update
         sudo apt install libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev
     - name: Generate Build Files
+      shell: bash
+      env:
+        CC: ${{ steps.install_compiler.outputs.cc }}
+        CXX: ${{ steps.install_compiler.outputs.cxx }}
       run: cmake -S . -B build
     - name: Build Library
+      shell: bash
+      env:
+        CC: ${{ steps.install_compiler.outputs.cc }}
+        CXX: ${{ steps.install_compiler.outputs.cxx }}
       run: cmake --build build --parallel
 
   build-macos:
-    name: Cocoa (MacOS, Clang)
+    name: Cocoa (MacOS, GCC)
     runs-on: macos-latest
     env:
-      CC: clang
-      CFLAGS: -Werror
-      MACOSX_DEPLOYMENT_TARGET: 10.8    
+      CFLAGS: -Werror    
     steps:
     - uses: actions/checkout@v3
+    - name: Install compiler
+      id: install_compiler
+      uses: rlalik/setup-cpp-compiler@master
+      with:
+        compiler: latest
     - name: Generate Build Files
+      shell: bash
+      env:
+        CC: ${{ steps.install_compiler.outputs.cc }}
+        CXX: ${{ steps.install_compiler.outputs.cxx }}
       run: cmake -S . -B build
     - name: Build Library
+      shell: bash
+      env:
+        CC: ${{ steps.install_compiler.outputs.cc }}
+        CXX: ${{ steps.install_compiler.outputs.cxx }}
       run: cmake --build build --parallel
 
   build-windows:
-    name: Win32 (Windows, Visual Studio 2022)
+    name: Win32 (Windows, GCC)
     runs-on: windows-latest
     env:
       CFLAGS: /WX
     steps:
     - uses: actions/checkout@v3
+    - name: Install compiler
+      id: install_compiler
+      uses: rlalik/setup-cpp-compiler@master
+      with:
+        compiler: latest
     - name: Generate Build Files
-      run: cmake -S . -B build -G "Visual Studio 17 2022"
+      shell: bash
+      env:
+        CC: ${{ steps.install_compiler.outputs.cc }}
+        CXX: ${{ steps.install_compiler.outputs.cxx }}
+      run: cmake -S . -B build
     - name: Build Library
+      shell: bash
+      env:
+        CC: ${{ steps.install_compiler.outputs.cc }}
+        CXX: ${{ steps.install_compiler.outputs.cxx }}
       run: cmake --build build --parallel
   
     
