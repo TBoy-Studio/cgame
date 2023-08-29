@@ -17,9 +17,6 @@ set(GLFW_BUILD_TESTS False)
 set(GLFW_BUILD_DOCS False)
 set(GLFW_INSTALL False)
 
-# Build with all warnings enabled and optimize maximally
-add_compile_options(-Wall -Wextra -Wpedantic -O3)
-
 # Include directories for header files
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/deps/glfw/include)
@@ -35,4 +32,8 @@ add_library( ${PROJECT_NAME}
     ${PROJECT_SOURCE_DIR}/src/model.c
 )
 
-target_link_libraries( ${PROJECT_NAME} PRIVATE m glfw )
+if(WIN32)
+    target_link_libraries( ${PROJECT_NAME} PRIVATE m glfw3 )
+elseif(UNIX)
+    target_link_libraries( ${PROJECT_NAME} PRIVATE m glfw )
+endif()
