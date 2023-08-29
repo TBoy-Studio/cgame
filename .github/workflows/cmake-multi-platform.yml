@@ -1,12 +1,9 @@
 # This starter workflow is for a CMake project running on multiple platforms. There is a different starter workflow if you just want a single platform.
 # See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-single-platform.yml
-name: Build on all platforms
+name: Build TEngine on all platforms
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  workflow_dispatch:
 
 defaults:
   run:
@@ -14,7 +11,7 @@ defaults:
 
 jobs:
   build-linux:
-    name: Linux (Linux, GCC)
+    name: Linux (Linux, Clang)
     runs-on: ubuntu-latest
     env:
       CC: clang
@@ -32,7 +29,7 @@ jobs:
       run: cmake --build build --parallel
 
   build-macos:
-    name: Cocoa (MacOS, GCC)
+    name: Cocoa (MacOS, Clang)
     runs-on: macos-latest
     env:
       CC: clang
@@ -44,5 +41,19 @@ jobs:
       run: cmake -S . -B build
     - name: Build Library
       run: cmake --build build --parallel
+
+  build-windows:
+    name: Windows (Windows-11, CL)
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: ilammy/msvc-dev-cmd@v1.12.1
+        with:
+          arch: x64
+    - name: Generate Build Files
+      run: cmake -S . -B build -G "NMake Makefiles"
+    - name: Build Library
+      run: cmake --build build --parallel
+
   
     
