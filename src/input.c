@@ -88,8 +88,6 @@ void Input_init(Window *window)
     glfwSetScrollCallback(glfw_window, _scrollCallback);
     glfwSetCursorPosCallback(glfw_window, _cursorCallback);
 
-    glfwSetInputMode(glfw_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
     // Make sure to set all function pointers to zero when initializing
     // Prevents accidentally interpreting a random value as a function to execute
     memset(
