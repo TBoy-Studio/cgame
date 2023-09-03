@@ -48,70 +48,70 @@ typedef struct{
     the window being drawn to.
     Other values of camera will use default values on startup.
 */
-void Camera_placeCamera(vec3 pos, vec3 up, float yaw, float pitch, float zoom, float aspect_ratio);
+Camera Camera_createCamera(vec3 pos, vec3 up, float yaw, float pitch, float zoom, float aspect_ratio);
 
 /*
     Gets the projection matrix for a perspective view from this camera and stores it in result
 */
-void Camera_getProjectionMatrix(mat4 result);
+void Camera_getProjectionMatrix(Camera *camera, mat4 result);
 
 /*
     Gets the view matrix of the camera in it's current state and stores it in result
 */
-void Camera_getViewMatrix(mat4 result);
+void Camera_getViewMatrix(Camera *camera, mat4 result);
 
 /*
     Handles updates of camera position caused by keyboard input
 */
-void Camera_processKeyboardMovement(Camera_MovementEnum movement, float delta_time);
+void Camera_processKeyboardMovement(Camera *camera, Camera_MovementEnum movement, float delta_time);
 
 /*
     Handles updates of camera pitch and yaw caused by mouse input
 */
-void Camera_processMouseMovement(float x_offset, float y_offset);
+void Camera_processMouseMovement(Camera *camera, float x_offset, float y_offset);
 
 /*
     Handles updates to camera zoom caused by scrolling the mouse wheel
 */
-void Camera_processMouseScroll(float y_offset);
+void Camera_processMouseScroll(Camera *camera, float y_offset);
 
 /*
     Set a pitch constraint on this camera.
     Trying to move a camera beyond the limits set by pitch_max and pitch_min
     will force the pitch value to be set to the limit, never surpassing it.
 */
-void Camera_setPitchConstraint(float pitch_max, float pitch_min);
+void Camera_setPitchConstraint(Camera *camera, float pitch_max, float pitch_min);
 
 /*
     Set a zoom constraint on this camera.
     Trying to move a camera beyond the limits set by zoom_max and zoom_min
     will force the zoom value to be set to the limit, never surpassing it.
 */
-void Camera_setZoomConstraint(float zoom_max, float zoom_min);
+void Camera_setZoomConstraint(Camera *camera, float zoom_max, float zoom_min);
 
 /*
     Updates the camera speed for movements that influence the camera's position
 */
-void Camera_setMovementSpeed(float speed);
+void Camera_setMovementSpeed(Camera *camera, float speed);
 
 /*
     Updates the camera speed for scrolling movements
 */
-void Camera_setScrollSpeed(float speed);
+void Camera_setScrollSpeed(Camera *camera, float speed);
 
 /*
     Set the sensitivity for mouse movements influencing this camera
 */
-void Camera_setSensitivity(float sensitivity);
+void Camera_setSensitivity(Camera *camera, float sensitivity);
 
 /*
     Set the aspect ratio of the camera (Calculated by dividing width by height)
 */
-void Camera_setAspectRatio(float aspect_ratio);
+void Camera_setAspectRatio(Camera *camera, float aspect_ratio);
 
 /*
     Set the near and far plane distances of this camera
 */
-void Camera_setNearFarPlaneDistances(float near, float far);
+void Camera_setNearFarPlaneDistances(Camera *camera, float near, float far);
 
 #endif
