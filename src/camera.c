@@ -4,11 +4,11 @@ Camera camera;
 
 static const float NEAR_PLANE_DIST = 0.1f;
 static const float FAR_PLANE_DIST = 200.0f;
-static const float SPEED = 5.0f;
+static const float MOVEMENT_SPEED = 5.0f;
+static const float SCROLL_SPEED = 1.0f;
 static const float SENSITIVITY = 0.1f;
-static const float ZOOM = 45.0f;
 
-static void _updateCameraVectors(void)
+static void updateCameraVectors(void)
 {
     // Calculate new front vector
     camera.front[0] = cos(glm_rad(camera.yaw)) * cos(glm_rad(camera.pitch));
@@ -24,24 +24,24 @@ static void _updateCameraVectors(void)
     glm_vec3_normalize(camera.up);
 }
 
-void Camera_placeCamera(vec3 pos, vec3 up, vec3 front, float yaw, float pitch, float aspect_ratio)
+void Camera_placeCamera(vec3 pos, vec3 up, float yaw, float pitch, float zoom, float aspect_ratio)
 {
     // Set vectors
     glm_vec3_copy(pos, camera.position);    
     glm_vec3_copy(up, camera.world_up);
-    glm_vec3_copy(front, camera.front);
     
     // Setting fields
-    camera.movement_speed = SPEED;
+    camera.movement_speed = MOVEMENT_SPEED;
+    camera.scroll_speed = SCROLL_SPEED;
     camera.mouse_sensitivity = SENSITIVITY;
-    camera.zoom = ZOOM;
+    camera.zoom = zoom;
     camera.yaw = yaw;
     camera.pitch = pitch;
     camera.aspect_ratio = aspect_ratio;
     camera.near_plane_dist = NEAR_PLANE_DIST;
     camera.far_plane_dist = FAR_PLANE_DIST;
 
-    _updateCameraVectors(); // Make sure vectors are up to date
+    updateCameraVectors(); // Make sure vectors are up to date
 }
 
 void Camera_getProjectionMatrix(mat4 result)
@@ -68,15 +68,15 @@ void Camera_processKeyboardMovement(Camera_MovementEnum movement, float delta_ti
     // Update position based on direction and speed
     if(movement == FORWARD)
         glm_vec3_muladds(camera.front,  velocity, camera.position);
-    if(movement == BACKWARD)
+    else if(movement == BACKWARD)
         glm_vec3_muladds(camera.front, -velocity, camera.position);
-    if(movement == LEFT)
+    else if(movement == LEFT)
         glm_vec3_muladds(camera.right, -velocity, camera.position);
-    if(movement == RIGHT)
+    else if(movement == RIGHT)
         glm_vec3_muladds(camera.right,  velocity, camera.position);
 }
 
-void Camera_processMouseMovement(float x_offset, float y_offset, unsigned char constrain_pitch)
+void Camera_processMouseMovement(float x_offset, float y_offset)
 {
     // Scale offsets by sensitivity
     x_offset *= camera.mouse_sensitivity;
@@ -86,26 +86,66 @@ void Camera_processMouseMovement(float x_offset, float y_offset, unsigned char c
     camera.yaw += x_offset;
     camera.pitch += y_offset;
 
-    // Check pitch constraint
-    if (constrain_pitch) {
-        if(camera.pitch > 89.0f)
-            camera.pitch = 89.0f;
-        if(camera.pitch < -89.0f)
-            camera.pitch = -89.0f;
-    }
+    // Apply pitch constraint
+    if(camera.pitch_constrain)
+        if(camera.pitch > camera.pitch_max) 
+            camera.pitch = camera.pitch_max;
+        else if(camera.pitch < camera.pitch_min) 
+            camera.pitch = camera.pitch_min;
 
     // Update camera vectors
-    _updateCameraVectors();
+    updateCameraVectors();
 }
 
 void Camera_processMouseScroll(float y_offset)
 {
     // Add offset to zoom
-    camera.zoom -= y_offset;
+    camera.zoom -= y_offset * camera.scroll_speed;
 
-    // Check zoom constraint
-    if(camera.zoom < 1.0f)
-        camera.zoom = 1.0f;
-    if(camera.zoom > 45.0f)
-        camera.zoom = 45.0f;
+    // Apply zoom constraint
+    if(camera.zoom_constrain)
+        if(camera.zoom > camera.zoom_max)
+            camera.zoom = camera.zoom_max;
+        if(camera.zoom < camera.zoom_min)
+            camera.zoom = camera.zoom_min;
+}
+
+void Camera_setPitchConstraint(float pitch_max, float pitch_min)
+{
+    camera.pitch_constrain = true;
+    camera.pitch_max = pitch_max;
+    camera.pitch_min = pitch_min;
+}
+
+void Camera_setZoomConstraint(float zoom_max, float zoom_min)
+{
+    camera.zoom_constrain = true;
+    camera.zoom_max = zoom_max;
+    camera.zoom_min = zoom_min;
+}
+
+void Camera_setMovementSpeed(float speed)
+{
+    camera.movement_speed = speed;
+}
+
+void Camera_setScrollSpeed(float speed)
+{
+    camera.scroll_speed = speed;
+}
+
+void Camera_setSensitivity(float sensitivity)
+{
+    camera.mouse_sensitivity = sensitivity;
+}
+
+void Camera_setAspectRatio(float aspect_ratio)
+{
+    camera.aspect_ratio = aspect_ratio;
+}
+
+void Camera_setNearFarPlaneDistances(float near, float far)
+{
+    camera.near_plane_dist = near;
+    camera.far_plane_dist = far;
 }

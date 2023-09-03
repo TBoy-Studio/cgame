@@ -13,6 +13,7 @@ typedef enum{
 } Camera_MovementEnum;
 
 typedef struct{
+    // Movement values
     vec3 position;
     vec3 front;
     vec3 up;
@@ -20,22 +21,34 @@ typedef struct{
     vec3 world_up;
     float yaw;
     float pitch;
-    float movement_speed;
-    float mouse_sensitivity;
     float zoom;
+
+    // Movement
+    float movement_speed;
+    float scroll_speed;
+    float mouse_sensitivity;
+
+    // Perspective configuration
     float aspect_ratio;
     float near_plane_dist;
     float far_plane_dist;
+
+    // Configurable constraints for zoom and pitch
+    float pitch_max;
+    float pitch_min;
+    float zoom_max;
+    float zoom_min;
+    unsigned char pitch_constrain;
+    unsigned char zoom_constrain;
 } Camera;
 
 /*
-    Create a camera at position {pos_x, pos_y, pos_z}
-    with world_up vector {up_x, up_y, up_z}
-    and yaw and pitch. 
-    Other values of camera will use default values
-    Stores resulting camera in result
+    Place a camera at position pos with an up vector to specify which direction will be up
+    Also configure yaw, pitch and zoom of camera on startup as well as the aspect ratio of
+    the window being drawn to.
+    Other values of camera will use default values on startup.
 */
-void Camera_placeCamera(vec3 pos, vec3 up, vec3 front, float yaw, float pitch, float aspect_ratio);
+void Camera_placeCamera(vec3 pos, vec3 up, float yaw, float pitch, float zoom, float aspect_ratio);
 
 /*
     Gets the projection matrix for a perspective view from this camera and stores it in result
@@ -55,11 +68,50 @@ void Camera_processKeyboardMovement(Camera_MovementEnum movement, float delta_ti
 /*
     Handles updates of camera pitch and yaw caused by mouse input
 */
-void Camera_processMouseMovement(float x_offset, float y_offset, unsigned char constrain_pitch);
+void Camera_processMouseMovement(float x_offset, float y_offset);
 
 /*
     Handles updates to camera zoom caused by scrolling the mouse wheel
 */
 void Camera_processMouseScroll(float y_offset);
+
+/*
+    Set a pitch constraint on this camera.
+    Trying to move a camera beyond the limits set by pitch_max and pitch_min
+    will force the pitch value to be set to the limit, never surpassing it.
+*/
+void Camera_setPitchConstraint(float pitch_max, float pitch_min);
+
+/*
+    Set a zoom constraint on this camera.
+    Trying to move a camera beyond the limits set by zoom_max and zoom_min
+    will force the zoom value to be set to the limit, never surpassing it.
+*/
+void Camera_setZoomConstraint(float zoom_max, float zoom_min);
+
+/*
+    Updates the camera speed for movements that influence the camera's position
+*/
+void Camera_setMovementSpeed(float speed);
+
+/*
+    Updates the camera speed for scrolling movements
+*/
+void Camera_setScrollSpeed(float speed);
+
+/*
+    Set the sensitivity for mouse movements influencing this camera
+*/
+void Camera_setSensitivity(float sensitivity);
+
+/*
+    Set the aspect ratio of the camera (Calculated by dividing width by height)
+*/
+void Camera_setAspectRatio(float aspect_ratio);
+
+/*
+    Set the near and far plane distances of this camera
+*/
+void Camera_setNearFarPlaneDistances(float near, float far);
 
 #endif
