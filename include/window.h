@@ -21,9 +21,16 @@ typedef struct{
 } Window;
 
 /*
-    Builds and starts showing a window
+    Builds and starts showing a window in fullscreen mode
+    on the user's primary monitor
 */
-Window Window_createWindow(const char* title);
+Window Window_createWindowFullscreen(const char *title);
+
+/*
+    Builds and starts showing a window in windowed mode
+    on the user's primary monitor
+*/
+Window Window_createWindowWindowed(const char *title, int width, int height);
 
 /*
     Set the function that gets called when the window size changes
