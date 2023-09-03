@@ -2,22 +2,25 @@
 
 static unsigned char _isGlfwInitialized;
 static unsigned char _isGladInitialized;
-static Window _window;
+
+static Window_SizeChangedFunc sizeChangedAction = 0;
 
 static void framebufferSizeCallback(GLFWwindow* glfw_window, int width, int height)
 {
-    // Update the viewport
-    glViewport(0, 0, width, height);
-
-    // Update the window fields
-    _window.width = width;
-    _window.height = height;
+    if(sizeChangedAction){
+        sizeChangedAction(width, height);
+    }
 }
 
-unsigned char Window_build(const char* title)
+Window Window_createWindow(const char* title)
 {
+    Window window = {0, 0, 0, 0};
+
+    // If a window has already been opened, don't build another one
+    if(_isGlfwInitialized) return window;
+
     // If GLFW has not been initialized, try to do it now
-    if(!_isGlfwInitialized && !glfwInit()) return 0; // If failed return 0    
+    if(!_isGlfwInitialized && !glfwInit()) return window; // If failed return 0    
     _isGlfwInitialized = 1; // glfw has been succesfully initialized
 
     // Configure GLFW window for the OpenGL version that will run in it
@@ -29,14 +32,14 @@ unsigned char Window_build(const char* title)
     GLFWmonitor* primary = glfwGetPrimaryMonitor();
     if(primary == NULL){
         glfwTerminate();
-        return 0;
+        return window;
     }
 
     // Get the videomode of that monitor
     const GLFWvidmode* mode = glfwGetVideoMode(primary);
     if(mode == NULL){
         glfwTerminate();
-        return 0;
+        return window;
     }
 
     // Get width and height from video mode
@@ -44,10 +47,10 @@ unsigned char Window_build(const char* title)
     int height = mode->height;
 
     // Call GLFW function to actually create the window
-    GLFWwindow* glfw_window = glfwCreateWindow(width, height, title, primary, NULL);
+    GLFWwindow* glfw_window = glfwCreateWindow(1920, 1080, title, NULL, NULL);
     if(glfw_window == NULL){
         glfwTerminate();
-        return 0;
+        return window;
     }
 
     // Make the window context the active context
@@ -59,7 +62,7 @@ unsigned char Window_build(const char* title)
     // If GLAD has not been initialized, try to do it now
     if(!_isGladInitialized && !gladLoadGL(glfwGetProcAddress)){
         glfwTerminate();    // abort if failed
-        return 0;
+        return window;
     }
     _isGladInitialized = 1; // glad has been succesfully initialized
 
@@ -67,22 +70,22 @@ unsigned char Window_build(const char* title)
     glViewport(0, 0, width, height);
 
     // Fill in the window fields
-    _window.win = glfw_window;
-    _window.width = width;
-    _window.height = height;
+    window.win = glfw_window;
+    window.width = width;
+    window.height = height;
+    window.success = 1;
 
-    return 1;
+    return window;
 }
 
-// TODO: MAKE SURE THIS NEVER NEEDS TO BE CALLED AND THEN REMOVE THE ENTIRE FUNCTION
-Window* Window_getActiveWindow(void)
+void Window_setSizeChangedAction(Window_SizeChangedFunc action)
 {
-    return &_window; // eww
+    sizeChangedAction = action;
 }
 
-void Window_destroy(void)
+void Window_destroy(Window *window)
 {
-    glfwDestroyWindow(_window.win);
+    glfwDestroyWindow(window->win);
     glfwTerminate();
     
     _isGlfwInitialized = 0;
