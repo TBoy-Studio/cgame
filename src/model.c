@@ -1,6 +1,6 @@
 #include <model.h>
 
-void mesh_setup(Mesh* mesh){
+static void setupMesh(Model_Mesh* mesh){
     // Make buffer objects and vertex arrays
     glGenVertexArrays(1, &mesh->vao);
     glGenBuffers(1, &mesh->vbo);
@@ -9,27 +9,29 @@ void mesh_setup(Mesh* mesh){
 
     // Set vertex buffer data
     glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
-    glBufferData(GL_ARRAY_BUFFER, mesh->vertex_count * sizeof(Vertex), mesh->vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, mesh->vertex_count * sizeof(Model_Vertex), mesh->vertices, GL_STATIC_DRAW);
 
     // Set vertex attributes
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Model_Vertex), (void*)0);
 
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Model_Vertex), (void*)offsetof(Model_Vertex, normal));
 
     glBindVertexArray(0);
 }
 
-void mesh_create(Vertex* vertices, unsigned int vertex_count, Mesh* result){
+void mesh_create(Model_Vertex* vertices, unsigned int vertex_count, Model_Mesh* result){
+    // Assign values
     result->vertices = vertices;
     result->vertex_count = vertex_count;
 
+    // Setup mesh for drawing with OpenGL
     mesh_setup(result);
     return;
 }
 
-void mesh_draw(Mesh* mesh){    
+void mesh_draw(Model_Mesh* mesh){    
     glBindVertexArray(mesh->vao);
     glDrawArrays(GL_TRIANGLES, 0, mesh->vertex_count);
     glBindVertexArray(0);
