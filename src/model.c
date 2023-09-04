@@ -21,17 +21,17 @@ static void setupMesh(Model_Mesh* mesh){
     glBindVertexArray(0);
 }
 
-void mesh_create(Model_Vertex* vertices, unsigned int vertex_count, Model_Mesh* result){
+void Model_createMesh(Model_Vertex* vertices, unsigned int vertex_count, Model_Mesh* result){
     // Assign values
     result->vertices = vertices;
     result->vertex_count = vertex_count;
 
     // Setup mesh for drawing with OpenGL
-    mesh_setup(result);
+    setupMesh(result);
     return;
 }
 
-void mesh_draw(Model_Mesh* mesh){    
+void Model_drawMesh(Model_Mesh* mesh){    
     glBindVertexArray(mesh->vao);
     glDrawArrays(GL_TRIANGLES, 0, mesh->vertex_count);
     glBindVertexArray(0);
