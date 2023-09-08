@@ -10,5 +10,8 @@
 #include <input.h>
 #include <shader.h>
 #include <model.h>
+#include <ecs.h>
+
+#include <cglm/cglm.h>
 
 #endif
