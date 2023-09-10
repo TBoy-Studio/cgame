@@ -9,14 +9,16 @@ typedef size_t StackMarker;
 
 typedef struct
 {
-    StackMarker top;
     size_t size;
+    StackMarker top;
     void *memory;
 }
 StackAllocator;
 
 typedef struct
 {
+    size_t element_size;
+    size_t num_elements;
     void *next_free;
     void *memory; 
 } 
@@ -40,4 +42,7 @@ void mem_stack_clear(StackAllocator* allocator);
 /*
     Pool allocator
 */
-PoolAllocator mem_create_pool_alloc(size_t element_size, size_t num);
+PoolAllocator mem_pool_create(size_t element_size, size_t num);
+void *mem_pool_element_new(PoolAllocator *pool);
+void *mem_pool_element_free(PoolAllocator *pool, size_t index);
+void mem_pool_free(PoolAllocator *pool);
