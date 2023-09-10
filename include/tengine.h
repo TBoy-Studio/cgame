@@ -1,10 +1,7 @@
-/*
-    Easy include file to include all parts of the tengine library
-*/
+#pragma once
 
-#ifndef TENGINE_H
-#define TENGINE_H
-
+#include <error.h>
+#include <memory.h>
 #include <window.h>
 #include <camera.h>
 #include <input.h>
@@ -14,4 +11,7 @@
 
 #include <cglm/cglm.h>
 
-#endif
+/*
+    Initializes all subsystems in the cgame library
+*/
+CgameError cgame_init();

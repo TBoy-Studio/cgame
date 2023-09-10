@@ -31,6 +31,7 @@ add_library( ${PROJECT_NAME}
     ${PROJECT_SOURCE_DIR}/src/input.c
     ${PROJECT_SOURCE_DIR}/src/model.c
     ${PROJECT_SOURCE_DIR}/src/ecs.c
+    ${PROJECT_SOURCE_DIR}/src/memory.c
 )
 
 if(WIN32)
