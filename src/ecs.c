@@ -89,7 +89,7 @@ Scene createScene(size_t max_entities)
     for(EComponentType type = TRANSFORM; type < sizeof(componentSizes) / sizeof(size_t); type++)
     {
         scene.pComponentPools[type].componentType = type;
-        scene.pComponentPools[type].pData = malloc(componentSizes[type] * scene.maxEntities);
+        scene.pComponentPools[type].pData = calloc(scene.maxEntities, componentSizes[type]);
     }
     return scene;
 }
