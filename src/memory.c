@@ -12,7 +12,7 @@ static inline uintptr_t _mem_align_pointer(uintptr_t address, size_t align)
     return (address + mask) & ~mask;
 }
 
-void *mem_create_aligned_alloc(size_t bytes, size_t align)
+void *mem_aligned_create(size_t bytes, size_t align)
 {
     // Calculate actual allocation size
     size_t actual_bytes = bytes + align;
@@ -32,7 +32,7 @@ void *mem_create_aligned_alloc(size_t bytes, size_t align)
     return p_alligned_mem;
 }
 
-void mem_free_aligned(void *p_mem)
+void mem_aligned_free(void *p_mem)
 {
     if(p_mem)
     {

@@ -27,8 +27,8 @@ PoolAllocator;
 /*
     Alligned allocator
 */
-void *mem_create_aligned_alloc(size_t bytes, size_t align);
-void mem_free_aligned(void *p_mem);
+void *mem_aligned_create(size_t bytes, size_t align);
+void mem_aligned_free(void *p_mem);
 
 /*
     Stack allocator
