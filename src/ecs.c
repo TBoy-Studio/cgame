@@ -1,17 +1,17 @@
 #include <ecs.h>
 
 // The amount of components is dependent on the size of the mask
-static const unsigned int MAX_COMPONENTS = sizeof(EntityComponentMask) << 3;
+static const unsigned int MAX_COMPONENTS = sizeof(CGameEntityComponentMask) << 3;
 
 static const size_t componentSizes[] = {
-    sizeof(Transform),
-    sizeof(MeshRenderer)
+    sizeof(CGameComponentTransform),
+    sizeof(CGameComponentMeshRenderer)
 };
 
 /*
     Get a pointer to the value at a specified index from this component pool
 */
-void *getValueFromComponentPool(ComponentPool *pool, size_t index)
+static inline void *_get_value_from_component_pool(CGameComponentPool *pool, size_t index)
 {
     return pool->pData + index * componentSizes[pool->componentType];
 }
@@ -19,15 +19,35 @@ void *getValueFromComponentPool(ComponentPool *pool, size_t index)
 /*
     Free memory from this component pool
 */
-void deleteComponentPool(ComponentPool *pool)
+static inline void _delete_component_pool(CGameComponentPool *pool)
 {
     free(pool->pData);
 }
 
 /*
+    Create a scene that can hold at most max_entities number of entities
+*/
+CGameEntityScene cgame_entity_scene_create(size_t max_entities)
+{
+    CGameEntityScene scene = {
+        .pEntities = malloc(sizeof(CGameEntityEntry) * max_entities),
+        .currentEntityCount = 0,
+        .maxEntities = max_entities,
+        .componentCount = MAX_COMPONENTS,
+        .pComponentPools = malloc(sizeof(CGameComponentPool) * MAX_COMPONENTS)
+    };
+    for(CGameComponentType type = TRANSFORM; type < sizeof(componentSizes) / sizeof(size_t); type++)
+    {
+        scene.pComponentPools[type].componentType = type;
+        scene.pComponentPools[type].pData = calloc(scene.maxEntities, componentSizes[type]);
+    }
+    return scene;
+}
+
+/*
     Get a new EntityID from the scene
 */
-EntityID createNewEntity(Scene *scene)
+CGameEntity cgame_entity_create(CGameEntityScene *scene)
 {   
     if(scene->currentEntityCount < scene->maxEntities)
     {
@@ -43,65 +63,45 @@ EntityID createNewEntity(Scene *scene)
 }
 
 /*
-    Returns whether or not this entity has a certain component
-*/
-unsigned char hasEntityComponent(Scene *scene, EntityID entity, EComponentType component)
-{
-    return scene->pEntities[entity].mask & (1 << component);
-}
-
-/*
     Add component to an entity
 */
-void addEntityComponent(Scene *scene, EntityID entity, EComponentType component)
+void cgame_entity_add_component(CGameEntityScene *scene, CGameEntity entity, CGameComponentType component)
 {
     scene->pEntities[entity].mask |= (1 << component);    
 }
 
 /*
-    Remove component from enemy
+    Returns whether or not this entity has a certain component
 */
-void removeEntityComponent(Scene *scene, EntityID entity, EComponentType component)
+unsigned char cgame_entity_has_component(CGameEntityScene *scene, CGameEntity entity, CGameComponentType component)
 {
-    scene->pEntities[entity].mask &= ~(1 << component);
+    return scene->pEntities[entity].mask & (1 << component);
 }
 
 /*
     Get a pointer to the specified component
 */
-void *getEntityComponent(Scene* scene, EntityID entity, EComponentType component)
+void *cgame_entity_get_component(CGameEntityScene *scene, CGameEntity entity, CGameComponentType component)
 {
-    return getValueFromComponentPool(&scene->pComponentPools[component], entity);
+    return _get_value_from_component_pool(&scene->pComponentPools[component], entity);
 }
 
 /*
-    Create a scene that can hold at most max_entities number of entities
+    Remove component from enemy
 */
-Scene createScene(size_t max_entities)
+void cgame_entity_remove_component(CGameEntityScene *scene, CGameEntity entity, CGameComponentType component)
 {
-    Scene scene = {
-        .pEntities = malloc(sizeof(EntityEntry) * max_entities),
-        .currentEntityCount = 0,
-        .maxEntities = max_entities,
-        .componentCount = MAX_COMPONENTS,
-        .pComponentPools = malloc(sizeof(ComponentPool) * MAX_COMPONENTS)
-    };
-    for(EComponentType type = TRANSFORM; type < sizeof(componentSizes) / sizeof(size_t); type++)
-    {
-        scene.pComponentPools[type].componentType = type;
-        scene.pComponentPools[type].pData = calloc(scene.maxEntities, componentSizes[type]);
-    }
-    return scene;
+    scene->pEntities[entity].mask &= ~(1 << component);
 }
 
 /*
     Free all allocated blocks associated with this scene
 */
-void deleteScene(Scene *scene)
+void cgame_entity_scene_delete(CGameEntityScene *scene)
 {
     for(unsigned int i = 0; i < scene->componentCount; i++)
     {
-        deleteComponentPool(&scene->pComponentPools[i]);
+        _delete_component_pool(&scene->pComponentPools[i]);
     }
     free(scene->pEntities);
     free(scene->pComponentPools);

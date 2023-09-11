@@ -2,28 +2,28 @@
 
 #define WINDOW_ZERO_INIT {0, 0, 0, 0};
 
-static unsigned char _isGlfwInitialized;
-static unsigned char _isGladInitialized;
+static unsigned char g_is_glfw_initialized;
+static unsigned char g_is_glad_initialized;
 
-static Window_SizeChangedFunc sizeChangedAction = 0;
+static CGameWindowSizeChangedFunc sizeChangedAction = 0;
 
-static void framebufferSizeCallback(GLFWwindow* glfw_window, int width, int height)
+static void _framebuffer_size_callback(GLFWwindow* glfw_window, int width, int height)
 {
     if(sizeChangedAction){
         sizeChangedAction(width, height);
     }
 }
 
-Window Window_createWindowFullscreen(const char* title)
+CGameWindow cgame_window_create_fullscreen(const char *title)
 {
-    Window window = WINDOW_ZERO_INIT;
+    CGameWindow window = WINDOW_ZERO_INIT;
 
     // If a window has already been opened, don't build another one
-    if(_isGlfwInitialized) return window;
+    if(g_is_glfw_initialized) return window;
 
     // If GLFW has not been initialized, try to do it now
-    if(!_isGlfwInitialized && !glfwInit()) return window; // If failed return 0    
-    _isGlfwInitialized = 1; // glfw has been succesfully initialized
+    if(!g_is_glfw_initialized && !glfwInit()) return window; // If failed return 0    
+    g_is_glfw_initialized = 1; // glfw has been succesfully initialized
 
     // Configure GLFW window for the OpenGL version that will run in it
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -59,14 +59,14 @@ Window Window_createWindowFullscreen(const char* title)
     glfwMakeContextCurrent(glfw_window);
 
     // Set callback for when window changes size
-    (void)glfwSetFramebufferSizeCallback(glfw_window, framebufferSizeCallback);
+    (void)glfwSetFramebufferSizeCallback(glfw_window, _framebuffer_size_callback);
 
     // If GLAD has not been initialized, try to do it now
-    if(!_isGladInitialized && !gladLoadGL(glfwGetProcAddress)){
+    if(!g_is_glad_initialized && !gladLoadGL(glfwGetProcAddress)){
         glfwTerminate();    // abort if failed
         return window;
     }
-    _isGladInitialized = 1; // glad has been succesfully initialized
+    g_is_glad_initialized = 1; // glad has been succesfully initialized
 
     // Configure OpenGL viewport
     glViewport(0, 0, width, height);
@@ -80,16 +80,16 @@ Window Window_createWindowFullscreen(const char* title)
     return window;
 }
 
-Window Window_createWindowWindowed(const char *title, int width, int height)
+CGameWindow cgame_window_create_windowed(const char *title, int width, int height)
 {
-    Window window = WINDOW_ZERO_INIT;
+    CGameWindow window = WINDOW_ZERO_INIT;
 
     // If a window has already been opened, don't build another one
-    if(_isGlfwInitialized) return window;
+    if(g_is_glfw_initialized) return window;
 
     // If GLFW has not been initialized, try to do it now
-    if(!_isGlfwInitialized && !glfwInit()) return window; // If failed return 0    
-    _isGlfwInitialized = 1; // glfw has been succesfully initialized
+    if(!g_is_glfw_initialized && !glfwInit()) return window; // If failed return 0    
+    g_is_glfw_initialized = 1; // glfw has been succesfully initialized
 
     // Configure GLFW window for the OpenGL version that will run in it
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -107,14 +107,14 @@ Window Window_createWindowWindowed(const char *title, int width, int height)
     glfwMakeContextCurrent(glfw_window);
 
     // Set callback for when window changes size
-    (void)glfwSetFramebufferSizeCallback(glfw_window, framebufferSizeCallback);
+    (void)glfwSetFramebufferSizeCallback(glfw_window, _framebuffer_size_callback);
 
     // If GLAD has not been initialized, try to do it now
-    if(!_isGladInitialized && !gladLoadGL(glfwGetProcAddress)){
+    if(!g_is_glad_initialized && !gladLoadGL(glfwGetProcAddress)){
         glfwTerminate();    // abort if failed
         return window;
     }
-    _isGladInitialized = 1; // glad has been succesfully initialized
+    g_is_glad_initialized = 1; // glad has been succesfully initialized
 
     // Configure OpenGL viewport
     glViewport(0, 0, width, height);
@@ -128,18 +128,18 @@ Window Window_createWindowWindowed(const char *title, int width, int height)
     return window;
 }
 
-void Window_setSizeChangedAction(Window_SizeChangedFunc action)
+void cgame_window_set_size_changed_action(CGameWindowSizeChangedFunc action)
 {
     sizeChangedAction = action;
 }
 
-void Window_destroy(Window *window)
+void cgame_window_destroy(CGameWindow *window)
 {
     glfwDestroyWindow(window->win);
     glfwTerminate();
     
-    _isGlfwInitialized = 0;
-    _isGladInitialized = 0;
+    g_is_glfw_initialized = 0;
+    g_is_glad_initialized = 0;
     
     return;
 }

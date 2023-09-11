@@ -1,97 +1,84 @@
-#ifndef ECS_H
-#define ECS_H
+#pragma once
 
 #include <cglm/types.h>
 #include <stdlib.h>
 #include <model.h>
 
-typedef unsigned int EntityID;
+typedef unsigned int CGameEntity;
 
-typedef unsigned int EntityComponentMask;
+typedef unsigned int CGameEntityComponentMask;
 
 typedef struct{
-    EntityID id;
-    EntityComponentMask mask;
-} EntityEntry;
+    CGameEntity id;
+    CGameEntityComponentMask mask;
+} CGameEntityEntry;
 
 typedef struct{
     vec3 position;
     vec3 rotation;
     vec3 scale;
-} Transform;
+} CGameComponentTransform;
 
 typedef struct
 {
-    Model_Mesh *mesh;
+    CGameModelMesh *mesh;
 } 
-MeshRenderer;
+CGameComponentMeshRenderer;
 
 typedef enum{
     TRANSFORM,
     MESHRENDERER
-} EComponentType;
+} CGameComponentType;
 
 typedef struct{
-    EComponentType componentType;
-    unsigned char *pData;
-} ComponentPool;
+    CGameComponentType componentType;
+    void *pData;
+} CGameComponentPool;
 
 typedef struct{
     // Constraints
     const unsigned int maxEntities;
 
     // Entities
-    EntityEntry *pEntities;
+    CGameEntityEntry *pEntities;
     unsigned int currentEntityCount;
     
     // Components
-    ComponentPool *pComponentPools;
+    CGameComponentPool *pComponentPools;
     unsigned int componentCount;
-} Scene;
-
-/*
-    Get a pointer to the value at a specified index from this component pool
-*/
-void *getValueFromComponentPool(ComponentPool *pool, size_t index);
-
-/*
-    Free memory from this component pool
-*/
-void deleteComponentPool(ComponentPool *pool);
-
-/*
-    Get a new EntityID from the scene
-*/
-EntityID createNewEntity(Scene *scene);
-
-/*
-    Returns whether or not this entity has a certain component
-*/
-unsigned char hasEntityComponent(Scene *scene, EntityID entity, EComponentType component);
-
-/*
-    Add component to an entity
-*/
-void addEntityComponent(Scene *scene, EntityID entity, EComponentType component);
-
-/*
-    Remove component from enemy
-*/
-void removeEntityComponent(Scene *scene, EntityID entity, EComponentType component);
-
-/*
-    Get a pointer to the specified component
-*/
-void *getEntityComponent(Scene* scene, EntityID entity, EComponentType component);
+} CGameEntityScene;
 
 /*
     Create a scene that can hold at most max_entities number of entities
 */
-Scene createScene(size_t max_entities);
+CGameEntityScene cgame_entity_scene_create(size_t max_entities);
+
+/*
+    Get a new EntityID from the scene
+*/
+CGameEntity cgame_entity_create(CGameEntityScene *scene);
+
+/*
+    Add component to an entity
+*/
+void cgame_entity_add_component(CGameEntityScene *scene, CGameEntity entity, CGameComponentType component);
+
+/*
+    Returns whether or not this entity has a certain component
+*/
+unsigned char cgame_entity_has_component(CGameEntityScene *scene, CGameEntity entity, CGameComponentType component);
+
+/*
+    Get a pointer to the specified component
+*/
+void *cgame_entity_get_component(CGameEntityScene *scene, CGameEntity entity, CGameComponentType component);
+
+/*
+    Remove component from enemy
+*/
+void cgame_entity_remove_component(CGameEntityScene *scene, CGameEntity entity, CGameComponentType component);
 
 /*
     Free all allocated blocks associated with this scene
 */
-void deleteScene(Scene *scene);
-
-#endif
+void cgame_entity_scene_delete(CGameEntityScene *scene);

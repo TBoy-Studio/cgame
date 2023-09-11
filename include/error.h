@@ -2,6 +2,6 @@
 
 typedef enum
 {
-    eSTARTUPFAILED
+    STARTUPFAILED
 } 
-CgameError;
+CGameError;

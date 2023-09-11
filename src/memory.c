@@ -12,7 +12,7 @@ static inline uintptr_t _mem_align_pointer(uintptr_t address, size_t align)
     return (address + mask) & ~mask;
 }
 
-void *mem_aligned_create(size_t bytes, size_t align)
+void *cgame_memory_alligned_alloc(size_t bytes, size_t align)
 {
     // Calculate actual allocation size
     size_t actual_bytes = bytes + align;
@@ -32,7 +32,7 @@ void *mem_aligned_create(size_t bytes, size_t align)
     return p_alligned_mem;
 }
 
-void mem_aligned_free(void *p_mem)
+void cgame_memory_alligned_free(void *p_mem)
 {
     if(p_mem)
     {
@@ -55,13 +55,13 @@ void mem_aligned_free(void *p_mem)
     ------------------
     Create a pool allocator for num elements of element_size
 */
-PoolAllocator mem_pool_create(size_t element_size, size_t num)
+CGameMemoryPoolAllocator cgame_memory_pool_create(size_t element_size, size_t num)
 {
     // In order to store free list inside pool 
     // element_size needs to be large enough to hold a pointer type
     assert(element_size >= sizeof(void*));
 
-    PoolAllocator pool;
+    CGameMemoryPoolAllocator pool;
 
     // Calculate alloc size
     size_t actual_bytes = element_size * num;
@@ -89,7 +89,7 @@ PoolAllocator mem_pool_create(size_t element_size, size_t num)
 /*
     Get a pointer to a free spot in this pool
 */
-void *mem_pool_element_new(PoolAllocator *pool)
+void *cgame_memory_pool_element_add(CGameMemoryPoolAllocator *pool)
 {
     // Get the next free location in the pool
     void *element = pool->next_free;
@@ -104,7 +104,7 @@ void *mem_pool_element_new(PoolAllocator *pool)
 /*
     Remove the element at the specified index from this pool.
 */
-void *mem_pool_element_free(PoolAllocator *pool, size_t index)
+void *cgame_memory_pool_element_remove(CGameMemoryPoolAllocator *pool, size_t index)
 {
     // Get the current next pointer
     void *current_next = pool->next_free;
@@ -125,7 +125,7 @@ void *mem_pool_element_free(PoolAllocator *pool, size_t index)
     Frees all memory associated with this PoolAllocator
     All pointers in the struct will become NULL 
 */
-void mem_pool_free(PoolAllocator *pool)
+void cgame_memory_pool_free(CGameMemoryPoolAllocator *pool)
 {
     free(pool->memory);
 
@@ -144,11 +144,11 @@ void mem_pool_free(PoolAllocator *pool)
     -------------------
     Create a stack allocator with size bytes
 */
-StackAllocator mem_stack_create(size_t bytes)
+CGameMemoryStackAllocator cgame_memory_stack_create(size_t size)
 {
-    StackAllocator allocator = {
-        .memory = malloc(bytes),
-        .size = bytes,
+    CGameMemoryStackAllocator allocator = {
+        .memory = malloc(size),
+        .size = size,
         .top = 0
     };
     return allocator;
@@ -157,13 +157,13 @@ StackAllocator mem_stack_create(size_t bytes)
 /*
     Create block of size bytes on stack
 */
-void *mem_stack_alloc(StackAllocator*allocator, size_t bytes)
+void *cgame_memory_stack_alloc(CGameMemoryStackAllocator *allocator, size_t bytes)
 {
     // Make sure allocation fits
     assert((allocator->top + bytes) < allocator->size);
 
     // Save current marker
-    StackMarker current_top = allocator->top;
+    CGameMemoryStackMarker current_top = allocator->top;
 
     // Increase stack pointer
     allocator->top += bytes;
@@ -175,7 +175,7 @@ void *mem_stack_alloc(StackAllocator*allocator, size_t bytes)
 /*
     Get the current top of the stack
 */
-inline StackMarker mem_stack_get_marker(StackAllocator *allocator)
+CGameMemoryStackMarker cgame_memory_stack_get_marker(CGameMemoryStackAllocator *allocator)
 {
     return allocator->top;
 }
@@ -183,7 +183,7 @@ inline StackMarker mem_stack_get_marker(StackAllocator *allocator)
 /*
     Free stack memory up to specified marker
 */
-inline void mem_stack_rollback(StackAllocator *allocator, StackMarker marker)
+void cgame_memory_stack_rollback(CGameMemoryStackAllocator *allocator, CGameMemoryStackMarker marker)
 {
     allocator->top = marker;
 }
@@ -191,7 +191,7 @@ inline void mem_stack_rollback(StackAllocator *allocator, StackMarker marker)
 /*
     Clear all stack memory
 */
-inline void mem_stack_clear(StackAllocator* allocator)
+void cgame_memory_stack_clear(CGameMemoryStackAllocator* allocator)
 {
     allocator->top = 0;
 }
@@ -200,7 +200,7 @@ inline void mem_stack_clear(StackAllocator* allocator)
     Frees all memory associated with this stack allocator
     All pointers in the struct will become NULL
 */
-inline void mem_stack_free(StackAllocator* allocator)
+void cgame_memory_stack_free(CGameMemoryStackAllocator *allocator)
 {
     free(allocator->memory);
 

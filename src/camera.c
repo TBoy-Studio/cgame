@@ -6,7 +6,7 @@ static const float MOVEMENT_SPEED = 5.0f;
 static const float SCROLL_SPEED = 1.0f;
 static const float SENSITIVITY = 0.1f;
 
-static void updateCameraVectors(Camera* camera)
+static inline void _update_camera_vectors(CGameCamera* camera)
 {
     // Calculate new front vector
     camera->front[0] = cos(glm_rad(camera->yaw)) * cos(glm_rad(camera->pitch));
@@ -22,9 +22,9 @@ static void updateCameraVectors(Camera* camera)
     glm_vec3_normalize(camera->up);
 }
 
-Camera Camera_createCamera(vec3 pos, vec3 up, float yaw, float pitch, float zoom, float aspect_ratio)
+CGameCamera cgame_camera_create(vec3 pos, vec3 up, float yaw, float pitch, float zoom, float aspect_ratio)
 {
-    Camera camera;
+    CGameCamera camera;
     
     // Set vectors
     glm_vec3_copy(pos, camera.position);    
@@ -45,17 +45,17 @@ Camera Camera_createCamera(vec3 pos, vec3 up, float yaw, float pitch, float zoom
     camera.pitch_constrain = false;
     camera.zoom_constrain = false;
 
-    updateCameraVectors(&camera); // Make sure vectors are up to date
+    _update_camera_vectors(&camera); // Make sure vectors are up to date
 
     return camera;
 }
 
-void Camera_getProjectionMatrix(Camera *camera, mat4 result)
+void cgame_camera_get_projection(CGameCamera *camera, mat4 result)
 {
     glm_perspective(glm_rad(camera->zoom), camera->aspect_ratio, camera->near_plane_dist, camera->far_plane_dist, result);
 }
 
-void Camera_getViewMatrix(Camera *camera, mat4 result)
+void cgame_camera_get_view(CGameCamera *camera, mat4 result)
 {
     vec3 sum; // Temp vector
     
@@ -66,7 +66,7 @@ void Camera_getViewMatrix(Camera *camera, mat4 result)
     glm_lookat(camera->position, sum, camera->up, result);
 }
 
-void Camera_processKeyboardMovement(Camera *camera, Camera_MovementEnum movement, float delta_time)
+void cgame_camera_handle_keyboard(CGameCamera *camera, CGameCameraMovement movement, float delta_time)
 {
     // Calculate velocity
     float velocity = camera->movement_speed * delta_time;
@@ -82,7 +82,7 @@ void Camera_processKeyboardMovement(Camera *camera, Camera_MovementEnum movement
         glm_vec3_muladds(camera->right,  velocity, camera->position);
 }
 
-void Camera_processMouseMovement(Camera *camera, float x_offset, float y_offset)
+void cgame_camera_handle_cursor(CGameCamera *camera, float x_offset, float y_offset)
 {
     // Scale offsets by sensitivity
     x_offset *= camera->mouse_sensitivity;
@@ -100,10 +100,10 @@ void Camera_processMouseMovement(Camera *camera, float x_offset, float y_offset)
             camera->pitch = camera->pitch_min;
 
     // Update camera vectors
-    updateCameraVectors(camera);
+    _update_camera_vectors(camera);
 }
 
-void Camera_processMouseScroll(Camera *camera, float y_offset)
+void cgame_camera_handle_scroll(CGameCamera *camera, float y_offset)
 {
     // Add offset to zoom
     camera->zoom -= y_offset * camera->scroll_speed;
@@ -116,41 +116,41 @@ void Camera_processMouseScroll(Camera *camera, float y_offset)
             camera->zoom = camera->zoom_min;
 }
 
-void Camera_setPitchConstraint(Camera *camera, float pitch_max, float pitch_min)
+void cgame_camera_set_constraint_pitch(CGameCamera *camera, float pitch_max, float pitch_min)
 {
     camera->pitch_constrain = true;
     camera->pitch_max = pitch_max;
     camera->pitch_min = pitch_min;
 }
 
-void Camera_setZoomConstraint(Camera *camera, float zoom_max, float zoom_min)
+void cgame_camera_set_constraint_zoom(CGameCamera *camera, float zoom_max, float zoom_min)
 {
     camera->zoom_constrain = true;
     camera->zoom_max = zoom_max;
     camera->zoom_min = zoom_min;
 }
 
-void Camera_setMovementSpeed(Camera *camera, float speed)
+void cgame_camera_set_speed_movement(CGameCamera *camera, float speed)
 {
     camera->movement_speed = speed;
 }
 
-void Camera_setScrollSpeed(Camera *camera, float speed)
+void cgame_camera_set_speed_scroll(CGameCamera *camera, float speed)
 {
     camera->scroll_speed = speed;
 }
 
-void Camera_setSensitivity(Camera *camera, float sensitivity)
+void cgame_camera_set_sensitivity(CGameCamera *camera, float sensitivity)
 {
     camera->mouse_sensitivity = sensitivity;
 }
 
-void Camera_setAspectRatio(Camera *camera, float aspect_ratio)
+void cgame_camera_set_aspect(CGameCamera *camera, float aspect_ratio)
 {
     camera->aspect_ratio = aspect_ratio;
 }
 
-void Camera_setNearFarPlaneDistances(Camera *camera, float near, float far)
+void cgame_camera_set_near_far_plane_distances(CGameCamera *camera, float near, float far)
 {
     camera->near_plane_dist = near;
     camera->far_plane_dist = far;

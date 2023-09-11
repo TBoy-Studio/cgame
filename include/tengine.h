@@ -14,4 +14,4 @@
 /*
     Initializes all subsystems in the cgame library
 */
-CgameError cgame_init();
+CGameError cgame_init();

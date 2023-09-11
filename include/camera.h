@@ -1,5 +1,4 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
 
 #include <cglm/types.h>
 #include <cglm/vec3.h>
@@ -10,7 +9,7 @@ typedef enum{
     BACKWARD,
     LEFT,
     RIGHT
-} Camera_MovementEnum;
+} CGameCameraMovement;
 
 typedef struct{
     // Movement values
@@ -40,7 +39,7 @@ typedef struct{
     float zoom_min;
     unsigned char pitch_constrain;
     unsigned char zoom_constrain;
-} Camera;
+} CGameCamera;
 
 /*
     Place a camera at position pos with an up vector to specify which direction will be up
@@ -48,70 +47,68 @@ typedef struct{
     the window being drawn to.
     Other values of camera will use default values on startup.
 */
-Camera Camera_createCamera(vec3 pos, vec3 up, float yaw, float pitch, float zoom, float aspect_ratio);
+CGameCamera cgame_camera_create(vec3 pos, vec3 up, float yaw, float pitch, float zoom, float aspect_ratio);
 
 /*
     Gets the projection matrix for a perspective view from this camera and stores it in result
 */
-void Camera_getProjectionMatrix(Camera *camera, mat4 result);
+void cgame_camera_get_projection(CGameCamera *camera, mat4 result);
 
 /*
     Gets the view matrix of the camera in it's current state and stores it in result
 */
-void Camera_getViewMatrix(Camera *camera, mat4 result);
+void cgame_camera_get_view(CGameCamera *camera, mat4 result);
 
 /*
     Handles updates of camera position caused by keyboard input
 */
-void Camera_processKeyboardMovement(Camera *camera, Camera_MovementEnum movement, float delta_time);
+void cgame_camera_handle_keyboard(CGameCamera *camera, CGameCameraMovement movement, float delta_time);
 
 /*
     Handles updates of camera pitch and yaw caused by mouse input
 */
-void Camera_processMouseMovement(Camera *camera, float x_offset, float y_offset);
+void cgame_camera_handle_cursor(CGameCamera *camera, float x_offset, float y_offset);
 
 /*
     Handles updates to camera zoom caused by scrolling the mouse wheel
 */
-void Camera_processMouseScroll(Camera *camera, float y_offset);
+void cgame_camera_handle_scroll(CGameCamera *camera, float y_offset);
 
 /*
     Set a pitch constraint on this camera.
     Trying to move a camera beyond the limits set by pitch_max and pitch_min
     will force the pitch value to be set to the limit, never surpassing it.
 */
-void Camera_setPitchConstraint(Camera *camera, float pitch_max, float pitch_min);
+void cgame_camera_set_constraint_pitch(CGameCamera *camera, float pitch_max, float pitch_min);
 
 /*
     Set a zoom constraint on this camera.
     Trying to move a camera beyond the limits set by zoom_max and zoom_min
     will force the zoom value to be set to the limit, never surpassing it.
 */
-void Camera_setZoomConstraint(Camera *camera, float zoom_max, float zoom_min);
+void cgame_camera_set_constraint_zoom(CGameCamera *camera, float zoom_max, float zoom_min);
 
 /*
     Updates the camera speed for movements that influence the camera's position
 */
-void Camera_setMovementSpeed(Camera *camera, float speed);
+void cgame_camera_set_speed_movement(CGameCamera *camera, float speed);
 
 /*
     Updates the camera speed for scrolling movements
 */
-void Camera_setScrollSpeed(Camera *camera, float speed);
+void cgame_camera_set_speed_scroll(CGameCamera *camera, float speed);
 
 /*
     Set the sensitivity for mouse movements influencing this camera
 */
-void Camera_setSensitivity(Camera *camera, float sensitivity);
+void cgame_camera_set_sensitivity(CGameCamera *camera, float sensitivity);
 
 /*
     Set the aspect ratio of the camera (Calculated by dividing width by height)
 */
-void Camera_setAspectRatio(Camera *camera, float aspect_ratio);
+void cgame_camera_set_aspect(CGameCamera *camera, float aspect_ratio);
 
 /*
     Set the near and far plane distances of this camera
 */
-void Camera_setNearFarPlaneDistances(Camera *camera, float near, float far);
-
-#endif
+void cgame_camera_set_near_far_plane_distances(CGameCamera *camera, float near, float far);

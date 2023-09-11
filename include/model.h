@@ -1,5 +1,4 @@
-#ifndef MODEL_H
-#define MODEL_H
+#pragma once
 
 #include <cglm/vec3.h>
 #include <glad/gl.h>
@@ -10,25 +9,23 @@
 typedef struct{
     vec3 position;
     vec3 normal;
-} Model_Vertex;
+} CGameModelVertex;
 
 /*
     The mesh holds the vertices array and a vao and vbo for drawing the mesh
 */
 typedef struct{
-    Model_Vertex* vertices;
+    CGameModelVertex* vertices;
     unsigned int vertex_count;
     unsigned int vao, vbo;
-} Model_Mesh;
+} CGameModelMesh;
 
 /*
     Build a mesh out of an array of vertices
 */
-void Model_createMesh(Model_Vertex* vertices, unsigned int vertex_count, Model_Mesh* result);
+void cgame_model_create_mesh(CGameModelVertex* vertices, unsigned int vertex_count, CGameModelMesh* result);
 
 /*
     Executes a draw call to draw the specified mesh
 */
-void Model_drawMesh(Model_Mesh* mesh);
-
-#endif
+void cgame_model_draw_mesh(CGameModelMesh* mesh);

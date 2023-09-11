@@ -1,6 +1,6 @@
 #include <shader.h>
 
-static Shader _compileShader(const char* shaderPath, GLenum type, Shader_Program program)
+static CGameShader _compile_shader(const char* shaderPath, GLenum type, CGameShaderProgram program)
 {
     // Sanity check
     if(!shaderPath) return 0;
@@ -26,7 +26,7 @@ static Shader _compileShader(const char* shaderPath, GLenum type, Shader_Program
     if(shaderBytesRead != shaderFileSize) return 0; // Something went wrong while reading
 
     // Create GL shader
-    Shader shader;
+    CGameShader shader;
     int success;
     shader = glCreateShader(type);
     glShaderSource(shader, 1, (const char**)&shaderSrcPtr, NULL);
@@ -43,16 +43,16 @@ static Shader _compileShader(const char* shaderPath, GLenum type, Shader_Program
     return shader;
 }
 
-Shader_Program Shader_createProgram(const char* vertexPath, const char* geometryPath, const char* fragmentPath)
+CGameShaderProgram cgame_shader_create_program(const char* vertexPath, const char* geometryPath, const char* fragmentPath)
 {
     // Create shader program
-    Shader_Program program;
+    CGameShaderProgram program;
     program = glCreateProgram();
 
     // Compile shaders into program
-    Shader vertex = _compileShader(vertexPath, GL_VERTEX_SHADER, program);
-    Shader geometry = _compileShader(geometryPath, GL_GEOMETRY_SHADER, program);
-    Shader fragment = _compileShader(fragmentPath, GL_FRAGMENT_SHADER, program);
+    CGameShader vertex = _compile_shader(vertexPath, GL_VERTEX_SHADER, program);
+    CGameShader geometry = _compile_shader(geometryPath, GL_GEOMETRY_SHADER, program);
+    CGameShader fragment = _compile_shader(fragmentPath, GL_FRAGMENT_SHADER, program);
 
     // Link program
     int success;
@@ -72,32 +72,32 @@ Shader_Program Shader_createProgram(const char* vertexPath, const char* geometry
     return program;
 }
 
-void Shader_useProgram(Shader_Program program)
+void cgame_shader_use_program(CGameShaderProgram program)
 {
     glUseProgram(program);
 }
 
-void Shader_setBool(Shader_Program program, const char* name, unsigned char value)
+void cgame_shader_set_bool(CGameShaderProgram program, const char* name, unsigned char value)
 {
     glUniform1i(glGetUniformLocation(program, name), (int)value);
 }
 
-void Shader_setInt(Shader_Program program, const char* name, int value)
+void cgame_shader_set_int(CGameShaderProgram program, const char* name, int value)
 {
     glUniform1i(glGetUniformLocation(program, name), value);
 }
 
-void Shader_setFloat(Shader_Program program, const char* name, float value)
+void cgame_shader_set_float(CGameShaderProgram program, const char* name, float value)
 {
     glUniform1f(glGetUniformLocation(program, name), value);
 }
 
-void Shader_setVec3(Shader_Program program, const char* name, vec3 value)
+void cgame_shader_set_vec3(CGameShaderProgram program, const char* name, vec3 value)
 {
     glUniform3fv(glGetUniformLocation(program, name), 1, value);
 }
 
-void Shader_setMat4(Shader_Program program, const char* name, mat4 value)
+void cgame_shader_set_mat4(CGameShaderProgram program, const char* name, mat4 value)
 {
     glUniformMatrix4fv(glGetUniformLocation(program, name), 1, GL_FALSE, &value[0][0]);
 }
