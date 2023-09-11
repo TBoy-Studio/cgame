@@ -9,7 +9,7 @@ int main()
     //----------------------------------------------------
     // Testing Alligned
     //----------------------------------------------------
-    vec4 *vectors = mem_aligned_create(NELEMENTS * sizeof(vec4), ALIGN);
+    vec4 *vectors = cgame_memory_alligned_alloc(NELEMENTS * sizeof(vec4), ALIGN);
 
     // Test if actually aligned
     assert((uintptr_t)vectors % ALIGN == 0);
@@ -31,5 +31,5 @@ int main()
     // Check if values are stored properly
     assert(vectors[NELEMENTS - 1][3] == 127.0f);
 
-    mem_aligned_free(vectors);
+    cgame_memory_alligned_free(vectors);
 }
