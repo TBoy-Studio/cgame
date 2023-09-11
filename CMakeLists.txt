@@ -34,6 +34,8 @@ add_library( ${PROJECT_NAME}
     ${PROJECT_SOURCE_DIR}/src/memory.c
 )
 
+add_subdirectory(${PROJECT_SOURCE_DIR}/test)
+
 if(WIN32)
     target_link_libraries( ${PROJECT_NAME} PRIVATE glfw )
 else()
