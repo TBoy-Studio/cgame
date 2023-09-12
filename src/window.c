@@ -1,6 +1,6 @@
 #include <window.h>
 
-#define WINDOW_ZERO_INIT {0, 0, 0, 0};
+#define WINDOW_ZERO_INIT {0, 0, 0, 0, {0.0f, 0.0f, 0.0f, 1.0f}};
 
 static unsigned char g_is_glfw_initialized;
 static unsigned char g_is_glad_initialized;
@@ -131,6 +131,22 @@ CGameWindow cgame_window_create_windowed(const char *title, int width, int heigh
 void cgame_window_set_size_changed_action(CGameWindowSizeChangedFunc action)
 {
     sizeChangedAction = action;
+}
+
+void cgame_window_set_background_color(CGameWindow *window, vec4 *color)
+{
+    glm_vec4_copy(color, window->background_color);
+}
+
+void cgame_window_draw_background(CGameWindow *window)
+{
+    glClearColor(  
+        window->background_color[0], 
+        window->background_color[1], 
+        window->background_color[2], 
+        window->background_color[3]
+    );
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void cgame_window_destroy(CGameWindow *window)

@@ -45,7 +45,13 @@ typedef struct{
 /*
     Initializes the input library and clears all callback functions.
 */
-void cgame_input_init(CGameWindow *window);
+void cgame_input_init();
+
+/*
+    Register callback functions on the specified window
+    Should only be used internally by cgame.
+*/
+void cgame_input_register_on_window(CGameWindow *window);
 
 /*
     Copies the specified array of keyactions over the array currently used by the window

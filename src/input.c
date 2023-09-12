@@ -67,16 +67,8 @@ static void _cursor_callback(GLFWwindow* window, double xpos, double ypos)
     g_mouse_last_y = ypos;
 }
 
-void cgame_input_init(CGameWindow *window)
+void cgame_input_init()
 {
-    GLFWwindow* glfw_window = window->win;
-
-    // Set generic key callback
-    glfwSetKeyCallback(glfw_window, _key_callback);
-    glfwSetMouseButtonCallback(glfw_window, _mouse_button_callback);
-    glfwSetScrollCallback(glfw_window, _scroll_callback);
-    glfwSetCursorPosCallback(glfw_window, _cursor_callback);
-
     // Make sure to set all function pointers to zero when initializing
     // Prevents accidentally interpreting a random value as a function to execute
     memset(
@@ -91,6 +83,17 @@ void cgame_input_init(CGameWindow *window)
     );
     g_current_scroll_action = 0;
     g_current_cursor_action = 0;
+}
+
+void cgame_input_register_on_window(CGameWindow *window)
+{
+    GLFWwindow* glfw_window = window->win;
+
+    // Set generic key callback
+    glfwSetKeyCallback(glfw_window, _key_callback);
+    glfwSetMouseButtonCallback(glfw_window, _mouse_button_callback);
+    glfwSetScrollCallback(glfw_window, _scroll_callback);
+    glfwSetCursorPosCallback(glfw_window, _cursor_callback);
 }
 
 void cgame_input_set_key_actions(CGameInputKeyActionContext key_actions[GLFW_KEY_LAST + 1])
