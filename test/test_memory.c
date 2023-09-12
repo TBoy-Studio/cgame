@@ -1,4 +1,4 @@
-#include <tengine.h>
+#include <cgame.h>
 #include <assert.h>
 
 #define NELEMENTS 128

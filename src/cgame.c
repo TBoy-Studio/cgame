@@ -1,4 +1,4 @@
-#include <tengine.h>
+#include <cgame.h>
 
 CGameError cgame_init()
 {
