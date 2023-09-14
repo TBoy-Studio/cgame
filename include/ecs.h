@@ -3,6 +3,7 @@
 #include <cglm/types.h>
 #include <stdlib.h>
 #include <model.h>
+#include <window.h>
 
 typedef unsigned int CGameEntity;
 
@@ -27,7 +28,8 @@ CGameComponentMeshRenderer;
 
 typedef enum{
     TRANSFORM,
-    MESHRENDERER
+    MESHRENDERER,
+    CONTROLLER
 } CGameComponentType;
 
 typedef struct{
@@ -47,6 +49,23 @@ typedef struct{
     CGameComponentPool *pComponentPools;
     unsigned int componentCount;
 } CGameEntityScene;
+
+/*
+    The type of function that gets called before the first frame is rendered
+*/
+typedef void (* CGameFuncStart)(CGameWindow *window, CGameEntityScene *scene, CGameEntity entity);
+
+/*
+    The type of function that gets called every frame
+*/
+typedef void (* CGameFuncUpdate)(void);
+
+typedef struct
+{
+    CGameFuncStart start;
+    CGameFuncUpdate update;
+}
+CGameComponentController;
 
 /*
     Create a scene that can hold at most max_entities number of entities

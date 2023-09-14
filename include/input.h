@@ -6,6 +6,7 @@
 
 // Including string.h for memory operations
 #include <string.h>
+#include <assert.h>
 
 /*
     The callback function type that gets called when a key is

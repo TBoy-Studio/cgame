@@ -2,13 +2,12 @@
 
 #include <error.h>
 #include <memory.h>
-// #include <file.h> Not ready for implementation yet
-#include <window.h>
+#include <controller.h>
 #include <camera.h>
 #include <input.h>
 #include <shader.h>
-#include <model.h>
 #include <ecs.h>
+#include <controller.h>
 
 #include <cglm/cglm.h>
 
@@ -17,7 +16,11 @@
 */
 CGameError cgame_init();
 
+void cgame_set_scene(CGameEntityScene *scene);
+
+void cgame_set_window(CGameWindow *window);
+
 /*
     Run the game, keeps going until window is closed
 */
-CGameError cgame_run(CGameWindow *window);
+CGameError cgame_run();
