@@ -109,7 +109,7 @@ void cgame_input_set_key_actions(CGameInputKeyActionContext key_actions[GLFW_KEY
 void cgame_input_set_key_action(int key, CGameInputKeyActionFunc key_action, unsigned char repeat)
 {
     // If key outside range, ignore
-    assert(key < 0 || key > GLFW_KEY_LAST);
+    assert(key >= 0 || key <= GLFW_KEY_LAST);
 
     // Update function pointer
     g_current_key_actions[(unsigned int)key].action = key_action;
@@ -128,7 +128,7 @@ void cgame_input_set_mouse_button_actions(CGameInputMouseButtonActionFunc button
 void cgame_input_set_mouse_button_action(int button, CGameInputMouseButtonActionFunc button_action)
 {
     // If key outside range, ignore
-    assert(button < 0 || button > GLFW_MOUSE_BUTTON_LAST);
+    assert(button >= 0 || button <= GLFW_MOUSE_BUTTON_LAST);
 
     // Update function pointer
     g_current_mouse_button_actions[(unsigned int)button] = button_action;
