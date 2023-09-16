@@ -14,7 +14,7 @@
 /*
     Initializes all subsystems in the cgame library
 */
-CGameError cgame_init();
+void cgame_init();
 
 void cgame_set_scene(CGameEntityScene *scene);
 
@@ -23,4 +23,9 @@ void cgame_set_window(CGameWindow *window);
 /*
     Run the game, keeps going until window is closed
 */
-CGameError cgame_run();
+void cgame_run();
+
+/*
+    Closes the game and cleans up all resources associated with cgame
+*/
+void cgame_exit();

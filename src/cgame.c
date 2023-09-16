@@ -3,7 +3,7 @@
 static CGameWindow *current_window = 0;
 static CGameEntityScene *current_scene = 0;
 
-CGameError cgame_init()
+void cgame_init()
 {
     cgame_input_init();
 }
@@ -42,7 +42,7 @@ static void run_updates()
     }
 }
 
-CGameError cgame_run()
+void cgame_run()
 {
     // Programmer checks
     assert(current_scene);
@@ -70,4 +70,9 @@ CGameError cgame_run()
         glfwSwapBuffers(current_window->win);
         glfwPollEvents();
     }
+}
+
+void cgame_exit()
+{
+    glfwSetWindowShouldClose(current_window->win, GLFW_TRUE);
 }
