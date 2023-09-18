@@ -2,6 +2,8 @@
 
 static CGameWindow *current_window = 0;
 static CGameEntityScene *current_scene = 0;
+static CGameShaderProgram current_program = 0;
+static CGameCamera *current_camera = 0;
 
 void cgame_init()
 {
@@ -16,6 +18,16 @@ void cgame_set_scene(CGameEntityScene *scene)
 void cgame_set_window(CGameWindow *window)
 {
     current_window = window;
+}
+
+void cgame_set_shader_program(CGameShaderProgram program)
+{
+    current_program = program;
+}
+
+void cgame_set_camera(CGameCamera *camera)
+{
+    current_camera = camera;
 }
 
 static void run_starts()
@@ -42,6 +54,33 @@ static void run_updates()
     }
 }
 
+static void render_objects()
+{
+    cgame_shader_use_program(current_program);
+    mat4 projection, view;
+
+    cgame_camera_get_projection(current_camera, projection);
+    cgame_camera_get_view(current_camera, view);
+
+    cgame_shader_set_mat4(current_program, "projection", projection);
+    cgame_shader_set_mat4(current_program, "view", view);
+
+    for(CGameEntity entity = 0; entity < current_scene->currentEntityCount; entity++)
+    {
+        if(cgame_entity_is_archetype(current_scene, entity, RENDEROBJECT))
+        {
+            CGameComponentMeshRenderer *mesh = cgame_entity_get_component(current_scene, entity, MESHRENDERER);
+            CGameComponentTransform *transform = cgame_entity_get_component(current_scene, entity, TRANSFORM);
+
+            mat4 model = GLM_MAT4_IDENTITY_INIT;
+            glm_translate(model, transform->position);
+            cgame_shader_set_mat4(current_program, "model", model);
+
+            cgame_model_draw_mesh(mesh->mesh);
+        }
+    }
+}
+
 void cgame_run()
 {
     // Programmer checks
@@ -63,8 +102,11 @@ void cgame_run()
         // Draw background
         cgame_window_draw_background(current_window);
 
-        // Updates should be called here
+        // Controller updates will be called here
         run_updates();
+
+        // Rendering
+        if(current_program && current_camera) render_objects();
 
         // Swap buffers
         glfwSwapBuffers(current_window->win);

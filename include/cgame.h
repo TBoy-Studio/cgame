@@ -20,6 +20,10 @@ void cgame_set_scene(CGameEntityScene *scene);
 
 void cgame_set_window(CGameWindow *window);
 
+void cgame_set_shader_program(CGameShaderProgram program);
+
+void cgame_set_camera(CGameCamera *camera);
+
 /*
     Run the game, keeps going until window is closed
 */
