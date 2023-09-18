@@ -9,16 +9,20 @@ typedef unsigned int CGameEntity;
 
 typedef unsigned int CGameEntityComponentMask;
 
-typedef struct{
+typedef struct
+{
     CGameEntity id;
     CGameEntityComponentMask mask;
-} CGameEntityEntry;
+} 
+CGameEntityEntry;
 
-typedef struct{
+typedef struct
+{
     vec3 position;
     vec3 rotation;
     vec3 scale;
-} CGameComponentTransform;
+} 
+CGameComponentTransform;
 
 typedef struct
 {
@@ -26,18 +30,29 @@ typedef struct
 } 
 CGameComponentMeshRenderer;
 
-typedef enum{
+typedef enum
+{
     TRANSFORM,
     MESHRENDERER,
     CONTROLLER
-} CGameComponentType;
+} 
+CGameComponentType;
 
-typedef struct{
+typedef enum
+{
+    RENDEROBJECT = (1 << TRANSFORM) | (1 << MESHRENDERER)
+}
+CGameArchetype;
+
+typedef struct
+{
     CGameComponentType componentType;
     void *pData;
-} CGameComponentPool;
+} 
+CGameComponentPool;
 
-typedef struct{
+typedef struct
+{
     // Constraints
     const unsigned int maxEntities;
 
@@ -48,7 +63,8 @@ typedef struct{
     // Components
     CGameComponentPool *pComponentPools;
     unsigned int componentCount;
-} CGameEntityScene;
+} 
+CGameEntityScene;
 
 /*
     The type of function that gets called before the first frame is rendered
@@ -86,6 +102,11 @@ void cgame_entity_add_component(CGameEntityScene *scene, CGameEntity entity, CGa
     Returns whether or not this entity has a certain component
 */
 unsigned char cgame_entity_has_component(CGameEntityScene *scene, CGameEntity entity, CGameComponentType component);
+
+/*
+    Returns whether or not this entity is of a certain archetype (has a specific set of components)
+*/
+unsigned char cgame_entity_is_archetype(CGameEntityScene *scene, CGameEntity entity, CGameArchetype archetype);
 
 /*
     Get a pointer to the specified component

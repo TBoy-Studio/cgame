@@ -22,7 +22,7 @@ static inline void *_get_value_from_component_pool(CGameComponentPool *pool, siz
 */
 static inline void _delete_component_pool(CGameComponentPool *pool)
 {
-    free(pool->pData);
+    if(pool->pData) free(pool->pData);
 }
 
 /*
@@ -79,6 +79,11 @@ unsigned char cgame_entity_has_component(CGameEntityScene *scene, CGameEntity en
     return scene->pEntities[entity].mask & (1 << component);
 }
 
+unsigned char cgame_entity_is_archetype(CGameEntityScene *scene, CGameEntity entity, CGameArchetype archetype)
+{
+    return (scene->pEntities[entity].mask & archetype) == archetype;
+}
+
 /*
     Get a pointer to the specified component
 */
@@ -100,9 +105,9 @@ void cgame_entity_remove_component(CGameEntityScene *scene, CGameEntity entity, 
 */
 void cgame_entity_scene_delete(CGameEntityScene *scene)
 {
-    for(unsigned int i = 0; i < scene->componentCount; i++)
+    for(CGameComponentType type = TRANSFORM; type < sizeof(componentSizes)/sizeof(size_t); type++)
     {
-        _delete_component_pool(&scene->pComponentPools[i]);
+        _delete_component_pool(&scene->pComponentPools[type]);
     }
     free(scene->pEntities);
     free(scene->pComponentPools);
