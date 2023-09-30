@@ -82,6 +82,10 @@ static void render_objects()
 
             mat4 model = GLM_MAT4_IDENTITY_INIT;
             glm_translate(model, transform->position);
+            glm_rotate_x(model, transform->rotation[0], model);
+            glm_rotate_y(model, transform->rotation[1], model);
+            glm_rotate_z(model, transform->rotation[2], model);
+            glm_scale(model, transform->scale);
             cgame_shader_set_mat4(current_program, "model", model);
 
             cgame_model_draw_mesh(mesh->mesh);
