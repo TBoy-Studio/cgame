@@ -16,19 +16,38 @@
 */
 void cgame_init();
 
+/*
+    Tell cgame which scene to render
+*/
 void cgame_set_scene(CGameEntityScene *scene);
 
+/*
+    Tell cgame which window to render to
+*/
 void cgame_set_window(CGameWindow *window);
 
+/*
+    Tell cgame which shader program needs to be used to render
+*/
 void cgame_set_shader_program(CGameShaderProgram program);
 
+/*
+    Tell cgame which camera is used to render the scene from
+*/
 void cgame_set_camera(CGameCamera *camera);
 
 /*
+    Get the time between this frame and the last frame
+*/
+double cgame_time_get_delta_time();
+
 /*
     Toggles rendering primitives as wireframes on/off
 */
 void cgame_set_wireframe_mode(unsigned char enabled);
+
+/*
+    Run the game, keeps going until window is closed or cgame_exit() is called
 */
 void cgame_run();
 
