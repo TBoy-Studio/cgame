@@ -4,6 +4,8 @@ static CGameWindow *current_window = 0;
 static CGameEntityScene *current_scene = 0;
 static CGameShaderProgram current_program = 0;
 static CGameCamera *current_camera = 0;
+static double delta_time = 0.0;
+static double last_frame = 0.0;
 
 void cgame_init()
 {
@@ -87,6 +89,11 @@ static void render_objects()
     }
 }
 
+double cgame_time_get_delta_time()
+{
+    return delta_time;
+}
+
 void cgame_run()
 {
     // Programmer checks
@@ -102,6 +109,11 @@ void cgame_run()
     // Keep going until window should close
     while(!glfwWindowShouldClose(current_window->win))
     {
+        // Timing
+        double current_frame = glfwGetTime();
+        delta_time = current_frame - last_frame;
+        last_frame = current_frame;
+
         // Handle Input
         cgame_input_handle_hold_down_keys();
 
