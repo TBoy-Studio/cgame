@@ -30,6 +30,12 @@ void cgame_set_camera(CGameCamera *camera)
     current_camera = camera;
 }
 
+void cgame_set_wireframe_mode(unsigned char enabled)
+{
+    if(enabled) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
 static void run_starts()
 {
     for(CGameEntity entity = 0; entity < current_scene->currentEntityCount; entity++)

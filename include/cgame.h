@@ -25,7 +25,10 @@ void cgame_set_shader_program(CGameShaderProgram program);
 void cgame_set_camera(CGameCamera *camera);
 
 /*
-    Run the game, keeps going until window is closed
+/*
+    Toggles rendering primitives as wireframes on/off
+*/
+void cgame_set_wireframe_mode(unsigned char enabled);
 */
 void cgame_run();
 
