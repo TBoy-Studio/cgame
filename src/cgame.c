@@ -107,6 +107,8 @@ void cgame_run()
     // Start capturing input from this window
     cgame_input_register_on_window(current_window);
 
+    physics_system.init(current_scene);
+
     // Run all registered start functions
     run_starts();
 
@@ -126,6 +128,8 @@ void cgame_run()
 
         // Controller updates will be called here
         run_updates();
+
+        physics_system.update();
 
         // Rendering
         if(current_program && current_camera) render_objects();

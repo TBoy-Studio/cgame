@@ -5,8 +5,10 @@
 #include <controller.h>
 #include <camera.h>
 #include <input.h>
-#include <shader.h>
 #include <ecs.h>
+#include <system.h>
+#include <shader.h>
+#include <physics.h>
 #include <controller.h>
 
 #include <cglm/cglm.h>

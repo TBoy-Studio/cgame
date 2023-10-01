@@ -6,7 +6,8 @@ static const unsigned int MAX_COMPONENTS = sizeof(CGameEntityComponentMask) << 3
 static const size_t componentSizes[] = {
     sizeof(CGameComponentTransform),
     sizeof(CGameComponentMeshRenderer),
-    sizeof(CGameComponentController)
+    sizeof(CGameComponentController),
+    sizeof(CGameComponentRigidbody)
 };
 
 /*

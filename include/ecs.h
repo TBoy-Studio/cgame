@@ -30,17 +30,26 @@ typedef struct
 } 
 CGameComponentMeshRenderer;
 
+typedef struct
+{
+    vec3 velocity;
+    float mass;
+}
+CGameComponentRigidbody;
+
 typedef enum
 {
     TRANSFORM,
     MESHRENDERER,
-    CONTROLLER
+    CONTROLLER,
+    RIGIDBODY
 } 
 CGameComponentType;
 
 typedef enum
 {
-    RENDEROBJECT = (1 << TRANSFORM) | (1 << MESHRENDERER)
+    RENDEROBJECT = (1 << TRANSFORM) | (1 << MESHRENDERER),
+    PHYSICSOBJECT = (1 << TRANSFORM) | (1 << RIGIDBODY)
 }
 CGameArchetype;
 
