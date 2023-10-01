@@ -104,7 +104,7 @@ void *cgame_memory_pool_element_add(CGameMemoryPoolAllocator *pool)
 /*
     Remove the element at the specified index from this pool.
 */
-void *cgame_memory_pool_element_remove(CGameMemoryPoolAllocator *pool, size_t index)
+void cgame_memory_pool_element_remove(CGameMemoryPoolAllocator *pool, size_t index)
 {
     // Get the current next pointer
     void *current_next = pool->next_free;
@@ -118,7 +118,6 @@ void *cgame_memory_pool_element_remove(CGameMemoryPoolAllocator *pool, size_t in
     // Update pool's next pointer to point to this element
     // which is now open for business
     pool->next_free = element;
-
 }
 
 /*

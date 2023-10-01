@@ -93,7 +93,7 @@ void *cgame_memory_pool_element_add(CGameMemoryPoolAllocator *pool);
 /*
     Remove single element from component pool at specified index
 */
-void *cgame_memory_pool_element_remove(CGameMemoryPoolAllocator *pool, size_t index);
+void cgame_memory_pool_element_remove(CGameMemoryPoolAllocator *pool, size_t index);
 
 /*
     Free memory allocated for this Pool Allocator
