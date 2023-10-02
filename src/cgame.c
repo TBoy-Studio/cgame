@@ -7,9 +7,10 @@ static CGameCamera *current_camera = 0;
 static double delta_time = 0.0;
 static double last_frame = 0.0;
 
-void cgame_init()
+void cgame_init(const char* executable_path)
 {
     cgame_input_init();
+    cgame_file_init(executable_path);
 }
 
 void cgame_set_scene(CGameEntityScene *scene)
