@@ -1,7 +1,6 @@
 #pragma once
 
 #include <error.h>
-#include <file.h>
 #include <memory.h>
 #include <controller.h>
 #include <camera.h>
@@ -17,7 +16,7 @@
 /*
     Initializes all subsystems in the cgame library
 */
-void cgame_init(const char* executable_path);
+void cgame_init();
 
 /*
     Tell cgame which scene to render
