@@ -9,8 +9,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <file.h>
-
 /*
     A shader is actually just an unsigned integer.
     This typedef makes it easier to distinguish between Shader and Shader_Program.

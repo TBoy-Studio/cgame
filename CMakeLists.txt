@@ -25,7 +25,6 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/deps/glfw)
 
 add_library( ${PROJECT_NAME} 
     ${PROJECT_SOURCE_DIR}/src/gl.c
-    ${PROJECT_SOURCE_DIR}/src/file.c
     ${PROJECT_SOURCE_DIR}/src/shader.c
     ${PROJECT_SOURCE_DIR}/src/camera.c
     ${PROJECT_SOURCE_DIR}/src/window.c
