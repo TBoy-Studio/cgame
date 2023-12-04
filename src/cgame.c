@@ -73,6 +73,11 @@ static void render_objects()
     cgame_shader_set_mat4(current_program, "projection", projection);
     cgame_shader_set_mat4(current_program, "view", view);
 
+    vec3 lightPos = {0.0f, 0.0f, 5.0f};
+    vec3 lightColor = {1.0f, 1.0f, 1.0f};
+    cgame_shader_set_vec3(current_program, "lightPos", lightPos);
+    cgame_shader_set_vec3(current_program, "lightColor", lightColor);
+
     for(CGameEntity entity = 0; entity < current_scene->currentEntityCount; entity++)
     {
         if(cgame_entity_is_archetype(current_scene, entity, RENDEROBJECT))
