@@ -62,7 +62,7 @@ void cgame_physics_apply_impulse(CGameComponentRigidbody *rigidbody, vec3 force)
 
 void cgame_physics_apply_acceleration(CGameComponentRigidbody *rigidbody, vec3 force)
 {
-    float delta_time;
+    float delta_time = cgame_time_get_delta_time();
     glm_vec3_muladds(force, delta_time, rigidbody->velocity); 
 }
 
