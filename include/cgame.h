@@ -2,14 +2,12 @@
 
 #include <error.h>
 #include <memory.h>
-#include <controller.h>
 #include <camera.h>
 #include <input.h>
-#include <ecs.h>
+#include <scene.h>
 #include <system.h>
 #include <shader.h>
 #include <physics.h>
-#include <controller.h>
 
 #include <cglm/cglm.h>
 
@@ -21,7 +19,7 @@ void cgame_init();
 /*
     Tell cgame which scene to render
 */
-void cgame_set_scene(CGameEntityScene *scene);
+void cgame_set_scene(CGameScene *scene);
 
 /*
     Tell cgame which window to render to

@@ -11,9 +11,9 @@
 
 static float gravity = 9.81;
 
-static CGameEntityScene *p_scene;
+static CGameScene *p_scene;
 
-static void init(CGameEntityScene *scene)
+static void init(CGameScene *scene)
 {
     p_scene = scene;
 }

@@ -1,7 +1,7 @@
 #include <cgame.h>
 
 static CGameWindow *current_window = 0;
-static CGameEntityScene *current_scene = 0;
+static CGameScene *current_scene = 0;
 static CGameShaderProgram current_program = 0;
 static CGameCamera *current_camera = 0;
 static double delta_time = 0.0;
@@ -12,14 +12,14 @@ void cgame_init()
     cgame_input_init();
 }
 
-void cgame_set_scene(CGameEntityScene *scene)
-{
-    current_scene = scene;
-}
-
 void cgame_set_window(CGameWindow *window)
 {
     current_window = window;
+}
+
+void cgame_set_scene(CGameScene * scene)
+{
+    current_scene = scene;
 }
 
 void cgame_set_shader_program(CGameShaderProgram program)
@@ -45,7 +45,7 @@ static void run_starts()
         if(cgame_entity_has_component(current_scene, entity, CONTROLLER))
         {
             CGameComponentController *controller = cgame_entity_get_component(current_scene, entity, CONTROLLER);
-            controller->start(current_window, current_scene, entity);
+            controller->start(entity);
         }
     }
 }
@@ -105,10 +105,6 @@ double cgame_time_get_delta_time()
 
 void cgame_run()
 {
-    // Programmer checks
-    assert(current_scene);
-    assert(current_window);
-
     // Start capturing input from this window
     cgame_input_register_on_window(current_window);
 
