@@ -23,18 +23,22 @@ include_directories(${PROJECT_SOURCE_DIR}/deps/glfw/include)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/deps/glfw)
 
-add_library( ${PROJECT_NAME} 
+add_library( ${PROJECT_NAME}
+    ${PROJECT_SOURCE_DIR}/deps/cJSON/cJSON.c
     ${PROJECT_SOURCE_DIR}/src/gl.c
     ${PROJECT_SOURCE_DIR}/src/shader.c
     ${PROJECT_SOURCE_DIR}/src/camera.c
     ${PROJECT_SOURCE_DIR}/src/window.c
     ${PROJECT_SOURCE_DIR}/src/input.c
     ${PROJECT_SOURCE_DIR}/src/model.c
-    ${PROJECT_SOURCE_DIR}/src/system.c
-    ${PROJECT_SOURCE_DIR}/src/ecs.c
+    ${PROJECT_SOURCE_DIR}/src/components/components.c
+    ${PROJECT_SOURCE_DIR}/src/components/controller.c
+    ${PROJECT_SOURCE_DIR}/src/components/meshrenderer.c
+    ${PROJECT_SOURCE_DIR}/src/components/rigidbody.c
+    ${PROJECT_SOURCE_DIR}/src/components/transform.c
+    ${PROJECT_SOURCE_DIR}/src/scene.c
     ${PROJECT_SOURCE_DIR}/src/memory.c
     ${PROJECT_SOURCE_DIR}/src/physics.c
-    ${PROJECT_SOURCE_DIR}/src/controller.c
     ${PROJECT_SOURCE_DIR}/src/cgame.c
 )
 
