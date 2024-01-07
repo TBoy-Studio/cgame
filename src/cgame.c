@@ -10,6 +10,7 @@ static double last_frame = 0.0;
 void cgame_init()
 {
     cgame_input_init();
+    cgame_file_init();
 }
 
 void cgame_set_window(CGameWindow *window)

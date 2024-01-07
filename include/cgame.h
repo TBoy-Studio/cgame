@@ -2,6 +2,7 @@
 
 #include <error.h>
 #include <memory.h>
+#include <file.h>
 #include <camera.h>
 #include <input.h>
 #include <scene.h>

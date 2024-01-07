@@ -6,7 +6,7 @@ static CGameShader _compile_shader(const char* shaderPath, GLenum type, CGameSha
     if(!shaderPath) return 0;
 
     // Try opening file
-    FILE* shaderFile = fopen(shaderPath, "r"); 
+    FILE* shaderFile = cgame_file_open(shaderPath, "r"); 
     if(!shaderFile) return 0;
 
     // Get shader file size
@@ -24,6 +24,8 @@ static CGameShader _compile_shader(const char* shaderPath, GLenum type, CGameSha
     unsigned long shaderBytesRead;
     shaderBytesRead = fread(shaderSrc, sizeof(char), shaderFileSize, shaderFile);
     if(shaderBytesRead != shaderFileSize) return 0;  // Something went wrong while reading
+
+    fclose(shaderFile);
 
     // Create GL shader
     CGameShader shader;

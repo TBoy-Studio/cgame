@@ -6,8 +6,7 @@
 #include <cglm/types.h>
 
 // Standard Libraries
-#include <stdio.h>
-#include <stdlib.h>
+#include <file.h>
 
 /*
     A shader is actually just an unsigned integer.

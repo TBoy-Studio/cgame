@@ -6,7 +6,7 @@ static char * _read_file(const char * file)
     if(!file) return 0;
 
     // Try opening file
-    FILE* scene_file = fopen(file, "r"); 
+    FILE* scene_file = cgame_file_open(file, "r"); 
     if(!scene_file) return 0;
 
     // Get shader file size
@@ -21,6 +21,8 @@ static char * _read_file(const char * file)
 
     // Read the file into the buffer
     (void)fread(scene_json, sizeof(char), scene_file_size, scene_file);
+
+    fclose(scene_file);
 
     return scene_json;
 }
